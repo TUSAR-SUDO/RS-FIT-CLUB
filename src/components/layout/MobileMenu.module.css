@@ -1,0 +1,245 @@
+/* ---------------------------------------------------------------------------
+   FULL-SCREEN MENU
+   Large display-type links, ghost numerals, contact block pinned to the
+   bottom. Stays mounted so it can animate closed; the `data-open` attribute
+   drives every transition and the element is inert when closed.
+   --------------------------------------------------------------------------- */
+
+.menu {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-menu);
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-0);
+  overscroll-behavior: contain;
+  overflow-y: auto;
+  overflow-x: clip;
+  visibility: hidden;
+  opacity: 0;
+  transition:
+    opacity var(--dur-3) var(--ease-out),
+    visibility 0s linear var(--dur-3);
+  /* Safe areas for notched phones. */
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.menu[data-open='true'] {
+  visibility: visible;
+  opacity: 1;
+  transition:
+    opacity var(--dur-3) var(--ease-out),
+    visibility 0s;
+}
+
+/* An accent diagonal that sweeps in behind the links. */
+.menu::before {
+  content: '';
+  position: absolute;
+  inset: auto -20% -30% -20%;
+  height: 60%;
+  background: linear-gradient(
+    180deg,
+    transparent,
+    color-mix(in srgb, var(--accent) 12%, transparent)
+  );
+  transform: translateY(40%) skewY(-6deg);
+  opacity: 0;
+  transition:
+    opacity var(--dur-4) var(--ease-out),
+    transform var(--dur-4) var(--ease-out);
+  pointer-events: none;
+}
+.menu[data-open='true']::before {
+  opacity: 1;
+  transform: translateY(0) skewY(-6deg);
+}
+
+/* ------------------------------------------------------------------- top */
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--header-h);
+  flex: none;
+  border-bottom: 1px solid var(--line);
+}
+
+.close {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  height: 48px;
+  padding-inline: 0.75rem;
+  margin-right: -0.75rem;
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
+  color: var(--text-dim);
+  transition: color var(--dur-2) var(--ease-out);
+}
+.close:hover {
+  color: var(--accent);
+}
+.closeIcon {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border: 1px solid var(--line-strong);
+  transition:
+    border-color var(--dur-2) var(--ease-out),
+    transform var(--dur-3) var(--ease-snap);
+}
+.close:hover .closeIcon {
+  border-color: var(--accent);
+  transform: rotate(90deg);
+}
+
+/* ------------------------------------------------------------------ links */
+.nav {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  padding-block: var(--sp-4);
+}
+
+.list {
+  width: 100%;
+  display: grid;
+  gap: 0.1rem;
+}
+
+.item {
+  /* Staggered entry. --i is set per item from the component. */
+  opacity: 0;
+  transform: translate3d(0, 26px, 0);
+  transition:
+    opacity var(--dur-3) var(--ease-out),
+    transform var(--dur-4) var(--ease-expo);
+  transition-delay: calc(var(--i) * 34ms);
+}
+.menu[data-open='true'] .item {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+  transition-delay: calc(80ms + var(--i) * 34ms);
+}
+
+.link {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  gap: 0.9rem;
+  padding-block: 0.42rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.linkNum {
+  font-family: var(--font-body);
+  font-size: 0.5625rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--accent);
+  flex: none;
+  transform: translateY(-0.35em);
+}
+
+.linkText {
+  font-family: var(--font-display);
+  font-weight: 700;
+  /* Sized off the viewport, not off the design: Unbounded is a very wide face
+     and "TRANSFORMATIONS" measures ~12.7em, so it is the item that decides
+     this number. 6.1vw keeps the longest label inside the gutter down to
+     320px, and the 2.4rem cap takes over once there is room to spare. */
+  font-size: clamp(1.25rem, 6.1vw, 2.4rem);
+  min-width: 0;
+  line-height: 1.06;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: var(--text);
+  transition:
+    color var(--dur-2) var(--ease-out),
+    transform var(--dur-3) var(--ease-expo);
+}
+
+/* Outline-to-solid on hover / active: the outline word is the resting state,
+   which keeps the long menu visually quiet until you reach for it. */
+.link:hover .linkText {
+  color: var(--accent);
+  transform: translateX(8px);
+}
+.link[aria-current='page'] .linkText {
+  color: transparent;
+  -webkit-text-stroke: 1.4px var(--accent);
+}
+
+/* ------------------------------------------------------------------- foot */
+.foot {
+  flex: none;
+  display: grid;
+  gap: var(--sp-3);
+  padding-block: var(--sp-4) var(--sp-5);
+  border-top: 1px solid var(--line);
+  opacity: 0;
+  transform: translate3d(0, 16px, 0);
+  transition:
+    opacity var(--dur-3) var(--ease-out),
+    transform var(--dur-3) var(--ease-out);
+  transition-delay: calc(120ms + var(--items, 8) * 34ms);
+}
+.menu[data-open='true'] .foot {
+  opacity: 1;
+  transform: none;
+}
+
+.footMeta {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.footLine {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8125rem;
+  color: var(--text-dim);
+  transition: color var(--dur-2) var(--ease-out);
+  min-height: 32px;
+}
+a.footLine:hover {
+  color: var(--accent);
+}
+
+.socials {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.social {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--line);
+  color: var(--text-dim);
+  transition:
+    color var(--dur-2) var(--ease-out),
+    border-color var(--dur-2) var(--ease-out);
+}
+.social:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.ctaRow {
+  display: grid;
+  gap: 0.6rem;
+}
+
+@media (min-width: 480px) {
+  .ctaRow {
+    grid-template-columns: 1fr 1fr;
+  }
+}

@@ -1,0 +1,188 @@
+/* ---------------------------------------------------------------------------
+   WHY RS FIT CLUB
+   A bento block with genuinely uneven cells (wide / tall / normal) rather than
+   the identical 3-up icon card grid. One cell is a photo slot that reveals
+   with a clip-path wipe; one cell carries the counters, and the counters
+   simply do not exist until the club supplies real numbers.
+   --------------------------------------------------------------------------- */
+
+.section {
+  position: relative;
+  background: var(--bg-1);
+  border-block: 1px solid var(--line);
+}
+
+.bento {
+  display: grid;
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+}
+
+/* Phones: a single stack with one deliberate two-column moment. */
+.bento {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.cell {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: clamp(1.15rem, 3vw, 1.9rem);
+  background: var(--bg-0);
+  min-height: 150px;
+  overflow: hidden;
+}
+
+.cellWide {
+  grid-column: span 2;
+}
+
+.cellTall {
+  grid-row: span 1;
+}
+
+@media (min-width: 768px) {
+  .bento {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  .cellWide {
+    grid-column: span 2;
+  }
+}
+
+@media (min-width: 1024px) {
+  .bento {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    grid-auto-rows: minmax(178px, auto);
+  }
+  .cellWide {
+    grid-column: span 3;
+  }
+  .cellTall {
+    grid-row: span 2;
+  }
+}
+
+.cellIcon {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--line-strong);
+  color: var(--accent);
+  clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+}
+
+.cellTitle {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  /* "NUTRITIONIST" is ~8.9em wide in Unbounded, and the narrowest bento cell
+     on a 360px phone is ~120px — so the floor here is set by that one word,
+     not by taste. */
+  font-size: clamp(0.8rem, 1.7vw, 1.15rem);
+  line-height: 1.18;
+  text-transform: uppercase;
+  letter-spacing: -0.005em;
+}
+
+.cellBody {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: var(--text-dim);
+  text-wrap: pretty;
+}
+
+/* --------------------------------------------------------------- photo cell */
+.photoCell {
+  padding: 0;
+  min-height: 220px;
+  position: relative;
+  grid-column: span 2;
+}
+
+@media (min-width: 1024px) {
+  .photoCell {
+    grid-column: span 3;
+    grid-row: span 2;
+  }
+}
+
+.photoClip {
+  position: absolute;
+  inset: 0;
+  will-change: clip-path;
+}
+
+.photoCaption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  padding: 1.5rem 1.35rem 1.1rem;
+  background: linear-gradient(0deg, rgba(5, 5, 6, 0.92), transparent);
+  font-size: 0.8125rem;
+  color: var(--text-dim);
+  pointer-events: none;
+}
+
+/* -------------------------------------------------------------- stat cell */
+.statCell {
+  grid-column: span 2;
+  gap: 1.25rem;
+}
+
+@media (min-width: 1024px) {
+  .statCell {
+    grid-column: span 3;
+  }
+}
+
+.statGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem 1.25rem;
+}
+
+.stat {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.statValue {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(1.5rem, 3.4vw, 2.35rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--text);
+}
+
+.statLabel {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  line-height: 1.3;
+}
+
+/* Shown instead of the counters while no real figures exist. */
+.statsEmpty {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: var(--text-dim);
+}
+
+.statsEmpty svg {
+  margin-top: 0.15rem;
+  flex: none;
+  color: var(--accent);
+}

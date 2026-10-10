@@ -1,0 +1,134 @@
+{
+  "photos": [
+    {
+      "file": "floor-wide-640",
+      "w": 640,
+      "h": 400
+    },
+    {
+      "file": "floor-wide-960",
+      "w": 960,
+      "h": 600
+    },
+    {
+      "file": "floor-wide-1280",
+      "w": 1280,
+      "h": 800
+    },
+    {
+      "file": "floor-wide-1600",
+      "w": 1600,
+      "h": 1000
+    },
+    {
+      "file": "transform-before-560",
+      "w": 560,
+      "h": 420
+    },
+    {
+      "file": "transform-before-800",
+      "w": 800,
+      "h": 600
+    },
+    {
+      "file": "transform-before-1120",
+      "w": 1120,
+      "h": 840
+    },
+    {
+      "file": "transform-after-560",
+      "w": 560,
+      "h": 420
+    },
+    {
+      "file": "transform-after-800",
+      "w": 800,
+      "h": 600
+    },
+    {
+      "file": "transform-after-1120",
+      "w": 1120,
+      "h": 840
+    },
+    {
+      "file": "team-strength-320",
+      "w": 320,
+      "h": 400
+    },
+    {
+      "file": "team-strength-480",
+      "w": 480,
+      "h": 600
+    },
+    {
+      "file": "team-strength-640",
+      "w": 640,
+      "h": 800
+    },
+    {
+      "file": "team-strength-800",
+      "w": 800,
+      "h": 1000
+    },
+    {
+      "file": "team-weights-320",
+      "w": 320,
+      "h": 400
+    },
+    {
+      "file": "team-weights-480",
+      "w": 480,
+      "h": 600
+    },
+    {
+      "file": "team-weights-640",
+      "w": 640,
+      "h": 800
+    },
+    {
+      "file": "team-weights-800",
+      "w": 800,
+      "h": 1000
+    },
+    {
+      "file": "team-class-320",
+      "w": 320,
+      "h": 400
+    },
+    {
+      "file": "team-class-480",
+      "w": 480,
+      "h": 600
+    },
+    {
+      "file": "team-class-640",
+      "w": 640,
+      "h": 800
+    },
+    {
+      "file": "team-class-800",
+      "w": 800,
+      "h": 1000
+    },
+    {
+      "file": "team-nutrition-320",
+      "w": 320,
+      "h": 400
+    },
+    {
+      "file": "team-nutrition-480",
+      "w": 480,
+      "h": 600
+    },
+    {
+      "file": "team-nutrition-640",
+      "w": 640,
+      "h": 800
+    },
+    {
+      "file": "team-nutrition-800",
+      "w": 800,
+      "h": 1000
+    }
+  ]
+}

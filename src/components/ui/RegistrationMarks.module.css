@@ -1,0 +1,62 @@
+/* Print-style registration crosshairs. Small, quiet, and the single detail
+   that most reliably stops a dark layout reading as a template. */
+.marks {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.mark {
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  color: var(--line-strong);
+}
+.mark::before,
+.mark::after {
+  content: '';
+  position: absolute;
+  background: currentColor;
+}
+.mark::before {
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+}
+.mark::after {
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+}
+
+.tl {
+  top: 0;
+  left: 0;
+}
+.tr {
+  top: 0;
+  right: 0;
+}
+.bl {
+  bottom: 0;
+  left: 0;
+}
+.br {
+  bottom: 0;
+  right: 0;
+}
+
+.accent .mark {
+  color: color-mix(in srgb, var(--accent) 45%, transparent);
+}
+
+/* On phones the marks would collide with gutters: keep only two. */
+@media (max-width: 767px) {
+  .tr,
+  .bl {
+    display: none;
+  }
+}

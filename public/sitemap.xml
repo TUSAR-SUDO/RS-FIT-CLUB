@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- TODO: replace https://rsfitclub.in with the confirmed domain, in this file,
+     src/data/siteConfig.ts (seo.siteUrl) and index.html (canonical + og:url). -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://rsfitclub.in/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://rsfitclub.in/about</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://rsfitclub.in/programs</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://rsfitclub.in/trainers</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://rsfitclub.in/transformations</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://rsfitclub.in/membership</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://rsfitclub.in/schedule</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://rsfitclub.in/gallery</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://rsfitclub.in/contact</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+</urlset>

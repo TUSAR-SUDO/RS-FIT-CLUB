@@ -1,0 +1,121 @@
+/* ============================================================================
+   RS FIT CLUB — DESIGN TOKENS
+   ----------------------------------------------------------------------------
+   EVERY colour, size, duration and easing used anywhere in the site is declared
+   here. To re-skin the whole site (for example, back to the orange of the
+   original reference) change --accent, --accent-ink and --accent-glow below and
+   nothing else. No component hard-codes a colour.
+
+   --accent is the exact pink sampled from the client's LOGO.png
+   (dominant flat value rgb(252, 2, 115) = #fc0273, verified by eyedropper).
+   ========================================================================== */
+
+:root {
+  /* ---------------------------------------------------------------- surfaces */
+  --bg-0: #050506;
+  --bg-1: #0b0b0e;
+  --bg-2: #121217;
+  --bg-3: #191920;
+  --line: rgba(255, 255, 255, 0.08);
+  --line-strong: rgba(255, 255, 255, 0.16);
+  --line-accent: color-mix(in srgb, var(--accent) 42%, transparent);
+
+  /* ------------------------------------------------------------------- text */
+  --text: #f4f4f6;
+  --text-dim: #a3a3ad;
+  --text-faint: #6f6f7a;
+  --ink: #08000b; /* text that sits on top of an --accent fill (5.4:1) */
+
+  /* ------------------------------------------------------------------ accent */
+  --accent: #fc0273; /* sampled from LOGO.png */
+  --accent-ink: #08000b;
+  --accent-glow: color-mix(in srgb, var(--accent) 45%, transparent);
+  --accent-soft: color-mix(in srgb, var(--accent) 14%, transparent);
+  --accent-deep: #a2014a;
+
+  /* ------------------------------------------------------------------ silver */
+  --silver: linear-gradient(135deg, #ffffff, #b9bcc4 45%, #f2f3f5 60%, #8d9099);
+  --silver-text: #d8dade;
+
+  /* ------------------------------------------------------------- typography */
+  --font-display: 'Unbounded Variable', 'Arial Black', system-ui, sans-serif;
+  --font-body: 'Manrope Variable', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-num: 'Unbounded Variable', ui-monospace, 'SFMono-Regular', monospace;
+
+  /* fluid type scale — min values are tuned for a 360px viewport */
+  /* Unbounded is a wide face: these caps are tuned so the longest hero word
+     still fits its column at 360px and at 1440px without clipping. */
+  --fs-display-1: clamp(2.35rem, 9.2vw, 5.9rem);
+  /* Section headings sit a clear step under the hero. Unbounded's advance
+     widths are wide, so this cap is what keeps a 15-character line inside an
+     8-of-12 column at 1440px without wrapping mid-phrase. */
+  --fs-display-2: clamp(1.85rem, 5vw, 4rem);
+  --fs-display-3: clamp(1.55rem, 4.4vw, 2.6rem);
+  --fs-display-4: clamp(1.25rem, 3vw, 1.7rem);
+  --fs-ghost: clamp(5.5rem, 24vw, 18rem);
+  --fs-ghost-xl: clamp(4.2rem, 26vw, 20rem);
+  --fs-lead: clamp(1.02rem, 1.7vw, 1.28rem);
+  --fs-body: clamp(0.9688rem, 1.15vw, 1.0625rem);
+  --fs-small: 0.875rem;
+  --fs-micro: 0.6875rem;
+
+  --lh-display: 0.86;
+  --lh-tight: 1.06;
+  --lh-body: 1.66;
+
+  --track-display: -0.02em;
+  --track-micro: 0.22em;
+  --track-label: 0.14em;
+
+  /* --------------------------------------------------------------- geometry */
+  --chamfer: 14px;
+  --chamfer-sm: 9px;
+  --chamfer-lg: 22px;
+  --stroke: 1px;
+  --stroke-thick: 2px;
+
+  /* --------------------------------------------------------------- spacing (8pt) */
+  --sp-1: 0.5rem;
+  --sp-2: 1rem;
+  --sp-3: 1.5rem;
+  --sp-4: 2rem;
+  --sp-5: 2.5rem;
+  --sp-6: 3rem;
+  --sp-8: 4rem;
+  --sp-10: 5rem;
+  --sp-12: 6rem;
+  --sp-16: 8rem;
+  --section-y: clamp(4.5rem, 11vh, 9rem);
+
+  /* ------------------------------------------------------------------ layout */
+  --shell-max: 1440px;
+  --shell-pad: clamp(1.25rem, 5vw, 4rem);
+  /* Tall enough for the stacked logo lockup, still slim enough to read as a
+     minimal bar rather than an app header. */
+  --header-h: 72px;
+
+  /* ------------------------------------------------------------------ motion */
+  --dur-1: 120ms;
+  --dur-2: 240ms;
+  --dur-3: 480ms;
+  --dur-4: 900ms;
+  --ease-out: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-snap: cubic-bezier(0.2, 1.35, 0.4, 1);
+
+  /* --------------------------------------------------------------- elevation */
+  --z-bar: 45;
+  --z-header: 50;
+  --z-grain: 60;
+  --z-menu: 70;
+  --z-loader: 90;
+  --z-modal: 100;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --chamfer: 18px;
+    --chamfer-lg: 30px;
+    --header-h: 86px;
+  }
+}

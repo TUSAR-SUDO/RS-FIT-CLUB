@@ -1,0 +1,147 @@
+/* ---------------------------------------------------------------------------
+   BEFORE / AFTER
+   Two stacked frames; the "after" layer is clipped from the left by a single
+   CSS custom property. One property change per drag frame, no layout, no
+   re-render of the children.
+   --------------------------------------------------------------------------- */
+
+.root {
+  --pos: 54;
+  --pos-pct: calc(var(--pos) * 1%);
+  position: relative;
+  width: 100%;
+  /* Horizontal drags are ours, vertical swipes still scroll the page. */
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+  cursor: ew-resize;
+  isolation: isolate;
+}
+
+.layer {
+  position: relative;
+  width: 100%;
+}
+
+/* The "after" half sits on top, revealed from the handle rightwards. */
+.layerAfter {
+  position: absolute;
+  inset: 0;
+  clip-path: inset(0 0 0 var(--pos-pct));
+  will-change: clip-path;
+}
+
+.tag {
+  position: absolute;
+  top: 0;
+  z-index: 3;
+  padding: 0.4rem 0.65rem;
+  font-size: 0.5625rem;
+  font-weight: 700;
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
+  background: var(--bg-0);
+  color: var(--text-dim);
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  pointer-events: none;
+}
+.tagBefore {
+  left: 0;
+}
+.tagAfter {
+  right: 0;
+  border-right: 0;
+  border-left: 1px solid var(--line);
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+/* ------------------------------------------------------------------ handle */
+.handle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--pos-pct);
+  z-index: 4;
+  width: 2px;
+  margin-left: -1px;
+  background: var(--accent);
+  box-shadow: 0 0 24px -2px var(--accent-glow);
+  pointer-events: none;
+}
+
+.knob {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  background: var(--accent);
+  color: var(--accent-ink);
+  clip-path: polygon(9px 0, 100% 0, 100% calc(100% - 9px), calc(100% - 9px) 100%, 0 100%, 0 9px);
+  pointer-events: auto;
+  cursor: grab;
+  touch-action: none; /* the knob may not scroll the page under the finger */
+}
+.root[data-dragging='true'] .knob {
+  cursor: grabbing;
+  transform: translate(-50%, -50%) scale(1.06);
+}
+
+.knob:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 3px;
+}
+
+/* The real control: a range input covering the whole area for keyboard and
+   screen-reader users. Visually hidden but focusable and operable. */
+.range {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: ew-resize;
+  touch-action: pan-y;
+  appearance: none;
+  background: transparent;
+}
+.range::-webkit-slider-thumb {
+  appearance: none;
+  width: 56px;
+  height: 100%;
+}
+.range::-moz-range-thumb {
+  width: 56px;
+  height: 100%;
+  border: 0;
+  background: transparent;
+}
+
+/* Ticks along the top hairline, a quiet designed detail. */
+.ticks {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  z-index: 3;
+  background: repeating-linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--text) 30%, transparent) 0 1px,
+    transparent 1px 6.25%
+  );
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .layerAfter {
+    will-change: auto;
+  }
+}

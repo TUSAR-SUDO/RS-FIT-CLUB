@@ -1,0 +1,11 @@
+# RS Fit Club — rsfitclub.in
+# Replace the domain in src/data/siteConfig.ts (seo.siteUrl) and here when the
+# real domain is confirmed.
+
+User-agent: *
+Allow: /
+
+# Nothing here yet, but keep crawlers off the asset folders.
+Disallow: /media/
+
+Sitemap: https://rsfitclub.in/sitemap.xml

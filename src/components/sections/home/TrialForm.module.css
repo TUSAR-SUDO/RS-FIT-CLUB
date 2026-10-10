@@ -1,0 +1,480 @@
+/* ===========================================================================
+   FREE TRIAL / CONTACT — the conversion engine.
+   The whole page exists to get a phone visitor here. Big diagonal accent edge
+   at the top so the section announces itself, form on the left, everything a
+   person needs to decide on the right.
+   =========================================================================== */
+
+.section {
+  position: relative;
+  overflow: clip;
+  background: var(--bg-0);
+  scroll-margin-top: calc(var(--header-h) + 8px);
+}
+
+/* The diagonal cut that opens the section. */
+.diagonal {
+  position: absolute;
+  top: 0;
+  left: -10%;
+  right: -10%;
+  height: clamp(60px, 9vw, 120px);
+  background: var(--bg-1);
+  clip-path: polygon(0 0, 100% 0, 100% 18%, 0 100%);
+  border-bottom: 1px solid var(--line);
+  pointer-events: none;
+}
+
+.grid {
+  position: relative;
+  display: grid;
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: start;
+}
+
+@media (min-width: 1024px) {
+  .grid {
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  }
+}
+
+.formCol {
+  display: grid;
+  gap: var(--sp-4);
+}
+
+/* ------------------------------------------------------------------ form */
+.form {
+  display: grid;
+  gap: 1rem;
+  padding: clamp(1.25rem, 3vw, 1.9rem);
+  background: var(--bg-1);
+  border: 1px solid var(--line);
+  clip-path: polygon(
+    18px 0,
+    100% 0,
+    100% calc(100% - 18px),
+    calc(100% - 18px) 100%,
+    0 100%,
+    0 18px
+  );
+}
+
+.field {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.fieldLabel {
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.required {
+  color: var(--accent);
+}
+
+.input,
+.select {
+  width: 100%;
+  min-height: 50px;
+  padding: 0.75rem 0.9rem;
+  background: var(--bg-0);
+  border: 1px solid var(--line-strong);
+  color: var(--text);
+  font-size: 1rem; /* ≥16px prevents iOS zoom-on-focus */
+  transition:
+    border-color var(--dur-2) var(--ease-out),
+    background-color var(--dur-2) var(--ease-out);
+  clip-path: polygon(9px 0, 100% 0, 100% calc(100% - 9px), calc(100% - 9px) 100%, 0 100%, 0 9px);
+  appearance: none;
+}
+
+.input:hover,
+.select:hover {
+  border-color: color-mix(in srgb, var(--text) 30%, transparent);
+}
+
+.input:focus-visible,
+.select:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+  border-color: var(--accent);
+}
+
+.select {
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--text-dim) 50%),
+    linear-gradient(135deg, var(--text-dim) 50%, transparent 50%);
+  background-position:
+    calc(100% - 20px) 22px,
+    calc(100% - 15px) 22px;
+  background-size:
+    6px 6px,
+    6px 6px;
+  background-repeat: no-repeat;
+  padding-right: 2.5rem;
+}
+
+.inputInvalid {
+  border-color: var(--accent);
+}
+
+.error {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.75rem;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.row {
+  display: grid;
+  gap: 1rem;
+}
+
+@media (min-width: 560px) {
+  .row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* ------------------------------------------------------------ time choice */
+.options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+.option {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-height: 50px;
+  padding: 0.6rem 0.85rem;
+  background: var(--bg-0);
+  border: 1px solid var(--line-strong);
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition:
+    border-color var(--dur-2) var(--ease-out),
+    background-color var(--dur-2) var(--ease-out);
+  clip-path: polygon(9px 0, 100% 0, 100% calc(100% - 9px), calc(100% - 9px) 100%, 0 100%, 0 9px);
+}
+
+.option:hover {
+  border-color: color-mix(in srgb, var(--accent) 50%, transparent);
+}
+
+.option input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.optionMark {
+  display: grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  flex: none;
+  border: 1px solid var(--line-strong);
+  transition:
+    background-color var(--dur-2) var(--ease-out),
+    border-color var(--dur-2) var(--ease-out);
+}
+
+.optionDot {
+  width: 7px;
+  height: 7px;
+  background: transparent;
+  transition: background-color var(--dur-2) var(--ease-out);
+}
+
+.option:has(input:checked) {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.option:has(input:checked) .optionMark {
+  border-color: var(--accent);
+}
+.option:has(input:checked) .optionDot {
+  background: var(--accent);
+}
+
+.option:has(input:focus-visible) {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Fallback for browsers without :has() — the checked state still reads. */
+@supports not selector(:has(*)) {
+  .option input:checked + .optionMark {
+    border-color: var(--accent);
+  }
+  .option input:checked + .optionMark .optionDot {
+    background: var(--accent);
+  }
+}
+
+/* --------------------------------------------------------------- honeypot */
+.honeypot {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.consent {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: var(--text-faint);
+}
+.consent svg {
+  margin-top: 0.12rem;
+  flex: none;
+  color: var(--text-faint);
+}
+
+/* Stacked rather than side by side: the button is the single most important
+   control on the page, so it gets the full measure and a full-width tap
+   target, with the reassurance line underneath where it reads as a caption. */
+.submitRow {
+  display: grid;
+  gap: 0.65rem;
+  justify-items: center;
+  text-align: center;
+}
+
+/* --------------------------------------------------------- plan chip */
+.planChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 0.5rem 0.5rem 0.85rem;
+  background: var(--accent-soft);
+  border: 1px solid var(--accent);
+  color: var(--text);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  justify-self: start;
+}
+
+.planChipRemove {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  color: var(--accent);
+  border: 1px solid color-mix(in srgb, var(--accent) 50%, transparent);
+  transition:
+    background-color var(--dur-2) var(--ease-out),
+    color var(--dur-2) var(--ease-out);
+}
+.planChipRemove:hover {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+/* ------------------------------------------------------------- success */
+.success {
+  display: grid;
+  justify-items: start;
+  gap: 1rem;
+  padding: clamp(1.5rem, 3.5vw, 2.25rem);
+  background: var(--bg-1);
+  border: 1px solid var(--line-accent);
+  clip-path: polygon(
+    18px 0,
+    100% 0,
+    100% calc(100% - 18px),
+    calc(100% - 18px) 100%,
+    0 100%,
+    0 18px
+  );
+}
+
+.successBadge {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 62px;
+  height: 62px;
+  color: var(--accent-ink);
+  background: var(--accent);
+  clip-path: polygon(
+    14px 0,
+    100% 0,
+    100% calc(100% - 14px),
+    calc(100% - 14px) 100%,
+    0 100%,
+    0 14px
+  );
+}
+
+.successRing {
+  position: absolute;
+  inset: -14px;
+  border: 1px solid var(--accent);
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.successTitle {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(1.15rem, 2.6vw, 1.6rem);
+  line-height: 1.1;
+  text-transform: uppercase;
+  letter-spacing: -0.015em;
+}
+
+.successBody {
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--text-dim);
+}
+
+.successActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+/* ------------------------------------------------------------- aside */
+.aside {
+  display: grid;
+  gap: var(--sp-4);
+  align-content: start;
+}
+
+.infoList {
+  display: grid;
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+}
+
+.info {
+  display: grid;
+  grid-template-columns: 34px 1fr;
+  gap: 0.75rem;
+  align-items: start;
+  padding: 0.95rem 1rem;
+  background: var(--bg-0);
+}
+
+.infoIcon {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--line-strong);
+  color: var(--accent);
+}
+
+.infoLabel {
+  display: block;
+  font-size: 0.5625rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  margin-bottom: 0.2rem;
+}
+
+.infoValue {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--text);
+}
+
+.infoValue a:hover {
+  color: var(--accent);
+}
+
+/* -------------------------------------------------------------- map slot */
+.mapSlot {
+  position: relative;
+  border: 1px solid var(--line);
+  background: var(--bg-1);
+  min-height: 240px;
+  display: grid;
+}
+
+.mapButton {
+  display: grid;
+  place-items: center;
+  gap: 0.6rem;
+  padding: 2rem 1.25rem;
+  width: 100%;
+  height: 100%;
+  color: var(--text-dim);
+  font-size: 0.8125rem;
+  text-align: center;
+  transition:
+    color var(--dur-2) var(--ease-out),
+    background-color var(--dur-2) var(--ease-out);
+}
+.mapButton:hover {
+  color: var(--text);
+  background: var(--bg-2);
+}
+
+.mapButtonIcon {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--line-strong);
+  color: var(--accent);
+}
+
+.mapFrame {
+  width: 100%;
+  min-height: 320px;
+  border: 0;
+  display: block;
+  filter: grayscale(1) contrast(1.1) brightness(0.8);
+}
+
+.mapNote {
+  padding: 0.75rem 1rem;
+  border-top: 1px solid var(--line);
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: var(--text-faint);
+}
+
+/* ------------------------------------------------------------ error box */
+.formError {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--accent);
+  background: var(--accent-soft);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--text);
+}
+.formError svg {
+  margin-top: 0.12rem;
+  flex: none;
+  color: var(--accent);
+}

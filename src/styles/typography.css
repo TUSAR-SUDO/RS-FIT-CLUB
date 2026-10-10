@@ -1,0 +1,165 @@
+/* ============================================================================
+   TYPOGRAPHY
+   Two families only: Unbounded (display, echoes the logo's cut-corner geometry)
+   and Manrope (body/UI). Numerals use Unbounded with tabular figures so stat
+   roll-ups don't jitter and read closer to a mono without adding a third font.
+   ========================================================================== */
+
+/* --------------------------------------------------------------- base rhythm */
+body {
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  font-weight: 400;
+  letter-spacing: -0.005em;
+}
+
+/* ------------------------------------------------------------------ display */
+.display-1,
+.display-2,
+.display-3,
+.display-4 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: var(--track-display);
+  line-height: var(--lh-display);
+  text-wrap: balance;
+  margin: 0;
+}
+
+.display-1 {
+  font-size: var(--fs-display-1);
+}
+.display-2 {
+  font-size: var(--fs-display-2);
+  line-height: 0.9;
+}
+.display-3 {
+  font-size: var(--fs-display-3);
+  line-height: 0.98;
+}
+.display-4 {
+  font-size: var(--fs-display-4);
+  line-height: 1.1;
+  letter-spacing: 0;
+  font-weight: 700;
+}
+
+/* Weight-axis relief: Unbounded 800 is very heavy, so long headlines drop to
+   700 above 768px to keep the counters crisp. */
+@media (min-width: 768px) {
+  .display-1,
+  .display-2 {
+    font-weight: 750;
+  }
+}
+
+/* --------------------------------------------------- outline / stroke-only text
+   Used on one keyword per headline. -webkit-text-stroke is supported in every
+   target browser; the fallback colour keeps it legible if strokes fail. */
+.outline {
+  color: transparent;
+  -webkit-text-stroke: 1.4px var(--accent);
+  paint-order: stroke fill;
+}
+.outline-silver {
+  color: transparent;
+  -webkit-text-stroke: 1.2px color-mix(in srgb, var(--silver-text) 70%, transparent);
+}
+@media (min-width: 768px) {
+  .outline {
+    -webkit-text-stroke-width: 2px;
+  }
+  .outline-silver {
+    -webkit-text-stroke-width: 1.6px;
+  }
+}
+/* If text-stroke is unsupported the word must still be readable. */
+@supports not (-webkit-text-stroke: 1px red) {
+  .outline {
+    color: var(--accent);
+  }
+  .outline-silver {
+    color: var(--silver-text);
+  }
+}
+
+/* ------------------------------------------------------------- micro label
+   "01 / PROGRAMMES" style. Tracked out, tiny, always uppercase. */
+.micro {
+  font-family: var(--font-body);
+  font-size: var(--fs-micro);
+  font-weight: 700;
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
+  line-height: 1;
+  color: var(--text-dim);
+}
+.micro--accent {
+  color: var(--accent);
+}
+
+/* -------------------------------------------------------------------- lead */
+.lead {
+  font-size: var(--fs-lead);
+  line-height: 1.5;
+  color: var(--text-dim);
+  text-wrap: pretty;
+}
+
+/* ------------------------------------------------------- numerals and stats */
+.num {
+  font-family: var(--font-num);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1;
+  letter-spacing: -0.01em;
+}
+
+/* --------------------------------------------------------------- ghost text
+   Oversized, barely-there display text that sits behind content. Purely
+   decorative, so it is aria-hidden at the call site. */
+.ghost {
+  font-family: var(--font-display);
+  font-weight: 800;
+  text-transform: uppercase;
+  font-size: var(--fs-ghost);
+  line-height: 0.8;
+  letter-spacing: -0.03em;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.07);
+  user-select: none;
+  pointer-events: none;
+}
+.ghost--accent {
+  -webkit-text-stroke-color: color-mix(in srgb, var(--accent) 22%, transparent);
+}
+.ghost--solid {
+  -webkit-text-stroke-color: transparent;
+  color: color-mix(in srgb, var(--text) 4%, transparent);
+}
+
+/* --------------------------------------------------------------- text links */
+.link-underline {
+  position: relative;
+  color: var(--text);
+  text-decoration: none;
+}
+.link-underline::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -0.18em;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(1);
+  transform-origin: left;
+  transition: background-color var(--dur-2) var(--ease-out);
+}
+.link-underline:hover {
+  color: var(--accent);
+}
+.link-underline:hover::after {
+  background: var(--accent);
+}

@@ -1,0 +1,71 @@
+/* ---------------------------------------------------------------------------
+   PAGE TRANSITION
+   A single chamfered curtain that rises from the bottom to cover, and then
+   continues up and out. 240ms in, 260ms out — under half a second total, which
+   is the limit before a transition starts feeling like latency.
+   --------------------------------------------------------------------------- */
+
+.curtain {
+  position: fixed;
+  inset: -2% 0 0 0;
+  z-index: calc(var(--z-loader) - 1);
+  pointer-events: none;
+  background: var(--bg-0);
+  /* The leading edge is a diagonal, not a flat line. */
+  clip-path: polygon(0 4%, 100% 0, 100% 100%, 0 100%);
+  transform: translate3d(0, 102%, 0);
+  transition: transform 260ms cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}
+
+.in {
+  transform: translate3d(0, 0, 0);
+  transition-duration: 240ms;
+  transition-timing-function: cubic-bezier(0.7, 0, 0.84, 0);
+}
+
+.out {
+  transform: translate3d(0, -102%, 0);
+}
+
+/* A hairline accent on the curtain's leading edge, plus the label. */
+.curtain::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 12vh;
+  background: linear-gradient(
+    0deg,
+    color-mix(in srgb, var(--accent) 22%, transparent),
+    transparent
+  );
+  opacity: 0;
+  transition: opacity 240ms ease-out;
+}
+.in::after {
+  opacity: 1;
+}
+
+.mark {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 84px;
+  transform: translate(-50%, -50%) scale(0.92);
+  opacity: 0;
+  transition:
+    opacity 180ms ease-out,
+    transform 240ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.in .mark {
+  opacity: 0.55;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .curtain {
+    display: none;
+  }
+}

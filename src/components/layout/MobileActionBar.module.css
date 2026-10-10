@@ -1,0 +1,91 @@
+/* ---------------------------------------------------------------------------
+   MOBILE ACTION BAR
+   Thumb-reachable conversion bar. Appears once the hero is out of the way,
+   retracts while the lead form is on screen (so it never covers the thing it
+   is asking you to do), and respects the notch/home-indicator safe area.
+   --------------------------------------------------------------------------- */
+
+.bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: var(--z-bar);
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  gap: 1px;
+  padding: 0.5rem var(--shell-pad);
+  padding-bottom: calc(0.5rem + env(safe-area-inset-bottom, 0px));
+  background: color-mix(in srgb, var(--bg-1) 96%, transparent);
+  border-top: 1px solid var(--line);
+  transform: translate3d(0, 118%, 0);
+  transition: transform var(--dur-3) var(--ease-expo);
+  will-change: transform;
+}
+
+.visible {
+  transform: translate3d(0, 0, 0);
+}
+
+/* No bar on wide screens: the header CTA is always reachable there. */
+@media (min-width: 1024px) {
+  .bar {
+    display: none;
+  }
+}
+
+.action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  min-height: 48px;
+  padding-inline: 0.5rem;
+  font-family: var(--font-display);
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  background: transparent;
+  transition:
+    color var(--dur-2) var(--ease-out),
+    background-color var(--dur-2) var(--ease-out),
+    transform var(--dur-1) var(--ease-out);
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.action:active {
+  transform: scale(0.96);
+  background: rgba(255, 255, 255, 0.04);
+  transition-duration: 70ms;
+}
+
+.call {
+  color: var(--text);
+}
+
+.whatsapp {
+  color: #4ade80;
+}
+
+.primary {
+  position: relative;
+  color: var(--accent-ink);
+  background: var(--accent);
+  font-weight: 700;
+}
+
+.primary:active {
+  background: color-mix(in srgb, var(--accent) 84%, #fff);
+}
+
+/* Single-action layout (when the club has not supplied a number yet). */
+@media (prefers-reduced-motion: reduce) {
+  .bar {
+    will-change: auto;
+    transition-duration: 1ms;
+  }
+}

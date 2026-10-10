@@ -1,0 +1,291 @@
+/* ===========================================================================
+   PROGRAMMES
+   Two deliberately different behaviours for the same eight cards:
+     · desktop  — pinned scene, the track travels horizontally as you scroll
+     · phones   — native scroll-snap carousel with momentum and a progress bar
+   Pinning a touch device fights the platform's own momentum scrolling, so it
+   is never done here. `data-mode` switches between the two.
+   =========================================================================== */
+
+.section {
+  position: relative;
+  background: var(--bg-0);
+}
+
+.pin {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: clamp(1.5rem, 4vh, 3rem);
+  overflow: hidden;
+}
+
+@media (min-width: 1024px) {
+  .pin {
+    height: 100svh;
+    padding-block: calc(var(--header-h) + 1rem) 2rem;
+  }
+}
+
+.head {
+  position: relative;
+  z-index: 2;
+}
+
+/* -------------------------------------------------------------- track */
+.trackWrap {
+  position: relative;
+}
+
+.track {
+  display: flex;
+  gap: clamp(0.75rem, 1.6vw, 1.5rem);
+  will-change: transform;
+}
+
+/* Phones: a real, momentum-friendly scroller. */
+@media (max-width: 1023px) {
+  .track {
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--shell-pad);
+    padding: 0.5rem var(--shell-pad) 1.25rem;
+    scrollbar-width: none;
+    will-change: auto;
+  }
+  .track::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@media (min-width: 1024px) {
+  .track {
+    padding-inline: var(--shell-pad);
+  }
+}
+
+/* --------------------------------------------------------------- card */
+.card {
+  position: relative;
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  width: min(78vw, 340px);
+  min-height: 380px;
+  padding: 1.5rem 1.35rem 1.35rem;
+  background: var(--bg-1);
+  border: 1px solid var(--line);
+  scroll-snap-align: center;
+  transition:
+    border-color var(--dur-3) var(--ease-out),
+    background-color var(--dur-3) var(--ease-out),
+    transform var(--dur-3) var(--ease-expo);
+  overflow: hidden;
+}
+
+@media (min-width: 1024px) {
+  .card {
+    width: clamp(300px, 26vw, 380px);
+    min-height: 430px;
+    padding: 2rem 1.75rem 1.75rem;
+  }
+}
+
+/* A diagonal accent wash that slides up on hover — the only "fill" effect. */
+.card::before {
+  content: '';
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 62%;
+  background: linear-gradient(
+    180deg,
+    transparent,
+    color-mix(in srgb, var(--accent) 13%, transparent)
+  );
+  transform: translateY(28%) skewY(-5deg);
+  transform-origin: bottom;
+  opacity: 0;
+  transition:
+    opacity var(--dur-3) var(--ease-out),
+    transform var(--dur-4) var(--ease-out);
+  pointer-events: none;
+}
+
+.card:hover,
+.card:focus-within,
+.card[data-active='true'] {
+  border-color: var(--line-accent);
+  background: var(--bg-2);
+}
+.card:hover::before,
+.card:focus-within::before,
+.card[data-active='true']::before {
+  opacity: 1;
+  transform: translateY(0) skewY(-5deg);
+}
+
+/* Active card on the mobile carousel lifts slightly. */
+.card[data-active='true'] {
+  transform: translateY(-4px);
+}
+
+.cardTop {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.numeral {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(2.6rem, 8vw, 3.6rem);
+  line-height: 0.8;
+  letter-spacing: -0.04em;
+  color: transparent;
+  -webkit-text-stroke: 1px color-mix(in srgb, var(--text) 26%, transparent);
+  transition:
+    -webkit-text-stroke-color var(--dur-3) var(--ease-out),
+    color var(--dur-3) var(--ease-out);
+}
+.card:hover .numeral,
+.card[data-active='true'] .numeral {
+  color: color-mix(in srgb, var(--accent) 18%, transparent);
+  -webkit-text-stroke-color: var(--accent);
+}
+@supports not (-webkit-text-stroke: 1px red) {
+  .numeral {
+    color: color-mix(in srgb, var(--text) 22%, transparent);
+  }
+}
+
+.iconWrap {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border: 1px solid var(--line);
+  color: var(--accent);
+  clip-path: polygon(9px 0, 100% 0, 100% calc(100% - 9px), calc(100% - 9px) 100%, 0 100%, 0 9px);
+  transition:
+    background-color var(--dur-3) var(--ease-out),
+    color var(--dur-3) var(--ease-out);
+}
+.card:hover .iconWrap,
+.card[data-active='true'] .iconWrap {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+.cardTitle {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.05rem, 2vw, 1.35rem);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+}
+
+.benefit {
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: var(--text);
+  text-wrap: pretty;
+}
+
+.detail {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--text-dim);
+  text-wrap: pretty;
+}
+
+.cardFoot {
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.cardLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  transition:
+    color var(--dur-2) var(--ease-out),
+    gap var(--dur-2) var(--ease-out);
+}
+.card:hover .cardLink {
+  color: var(--accent);
+  gap: 0.7rem;
+}
+
+/* The whole card is clickable, but the link keeps a real accessible target. */
+.cardLinkStretch {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+}
+
+/* ------------------------------------------------- mobile progress + hint */
+.progressRow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0 var(--shell-pad) 0.5rem;
+}
+
+@media (min-width: 1024px) {
+  .progressRow {
+    display: none;
+  }
+}
+
+.progressTrack {
+  position: relative;
+  flex: 1;
+  height: 2px;
+  background: var(--line);
+  overflow: hidden;
+}
+
+.progressBar {
+  position: absolute;
+  inset: 0;
+  transform-origin: left;
+  transform: scaleX(var(--p, 0.12));
+  background: var(--accent);
+  will-change: transform;
+}
+
+.hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.5625rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .track,
+  .progressBar {
+    will-change: auto;
+  }
+}

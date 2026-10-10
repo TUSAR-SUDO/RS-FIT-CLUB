@@ -1,0 +1,404 @@
+/* ===========================================================================
+   HERO
+   Five stacked layers, each moving at its own speed:
+     0  decorative grid + giant ghost wordmark
+     1  accent diagonal slash
+     2  founder cutout (bottom-anchored, bleeding off the right edge)
+     3  foreground sparks + the headline block
+   All parallax is transform-driven — no `background-attachment: fixed`,
+   which iOS ignores outright.
+   =========================================================================== */
+
+.hero {
+  position: relative;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  overflow: clip;
+  isolation: isolate;
+  padding-top: var(--header-h);
+  background:
+    radial-gradient(
+      90% 60% at 82% 78%,
+      color-mix(in srgb, var(--accent) 9%, transparent),
+      transparent 70%
+    ),
+    radial-gradient(70% 50% at 10% 0%, rgba(255, 255, 255, 0.045), transparent 65%), var(--bg-0);
+}
+
+/* ------------------------------------------------- layer 0: designed grid */
+.gridLines {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.5;
+  background-image: repeating-linear-gradient(90deg, var(--line) 0 1px, transparent 1px 25%);
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.9), transparent 78%);
+  -webkit-mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.9), transparent 78%);
+}
+@media (max-width: 767px) {
+  .gridLines {
+    background-image: repeating-linear-gradient(90deg, var(--line) 0 1px, transparent 1px 50%);
+  }
+}
+
+/* ----------------------------------------------------- layer 0: ghost word */
+.ghostLayer {
+  position: absolute;
+  top: clamp(14%, 12vh, 20%);
+  left: 0;
+  z-index: 0;
+  width: 100%;
+  overflow: clip;
+  pointer-events: none;
+}
+
+.ghostWord {
+  display: inline-block;
+  white-space: nowrap;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(5.5rem, 21vw, 19rem);
+  line-height: 0.78;
+  letter-spacing: -0.035em;
+  text-transform: uppercase;
+  color: transparent;
+  -webkit-text-stroke: 1px color-mix(in srgb, var(--text) 9%, transparent);
+  padding-inline: 0.1em;
+  will-change: transform;
+}
+@supports not (-webkit-text-stroke: 1px red) {
+  .ghostWord {
+    color: color-mix(in srgb, var(--text) 5%, transparent);
+  }
+}
+
+/* -------------------------------------------------------- layer 1: slash */
+.slash {
+  position: absolute;
+  z-index: 1;
+  top: 6%;
+  right: -4%;
+  width: clamp(120px, 26vw, 340px);
+  height: 118%;
+  transform: rotate(-19deg);
+  transform-origin: top center;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--accent) 88%, transparent) 0%,
+    color-mix(in srgb, var(--accent) 30%, transparent) 55%,
+    transparent 100%
+  );
+  opacity: 0.5;
+  filter: blur(0.5px);
+  pointer-events: none;
+  will-change: transform;
+}
+/* A second, harder edge to echo the logo's cut corners. Desktop only: on
+   phones the text spans the full width, so this line would cut straight
+   through the headline. */
+.slashHard {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .slashHard {
+    display: block;
+    position: absolute;
+    z-index: 1;
+    top: 18%;
+    right: 20%;
+    width: clamp(3px, 0.8vw, 8px);
+    height: 74%;
+    transform: rotate(-19deg);
+    background: var(--accent);
+    opacity: 0.7;
+    pointer-events: none;
+    will-change: transform;
+  }
+}
+
+/* ------------------------------------------------- layer 2: the founder */
+/* Sizing note: the founder's head is at the TOP of the cutout, so a taller
+   render moves his face UP into the headline. The width/bottom pair here is
+   tuned so his head lands in the gap between the sub-line and the CTA block at
+   390×844, while his shoulders and arms sit behind the CTAs for the crop to
+   bite. Change one and re-check both 390px and 430px. */
+.figure {
+  position: absolute;
+  z-index: 2;
+  right: -10%;
+  bottom: -8%;
+  width: min(86vw, 430px);
+  will-change: transform;
+}
+
+@media (min-width: 768px) {
+  .figure {
+    right: -4%;
+    width: min(52vw, 520px);
+  }
+}
+
+@media (min-width: 1024px) {
+  .figure {
+    right: 3%;
+    width: min(36vw, 540px);
+  }
+}
+
+@media (min-width: 1440px) {
+  .figure {
+    right: 2%;
+    width: min(36vw, 560px);
+  }
+}
+
+/* ---------------------------------------------------------- layer 3: text
+   Two groups, pushed apart on phones so the founder's head and shoulders show
+   through the empty middle band and the CTAs land under the thumb. On desktop
+   the pair simply centres as one column. */
+.content {
+  position: relative;
+  z-index: 3;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  padding-block: var(--sp-4) var(--sp-6);
+}
+
+.topGroup,
+.bottomGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+
+.bottomGroup {
+  align-items: flex-start;
+}
+
+@media (min-width: 1024px) {
+  .content {
+    justify-content: center;
+    gap: var(--sp-5);
+    padding-block: var(--sp-6) var(--sp-8);
+  }
+  /* The text column is constrained on the GROUPS, not on .content itself:
+     this element also carries the .shell class, so a max-width here would
+     override the shell's own 1440px cap and re-centre the whole column away
+     from the page gutter. */
+  .topGroup,
+  .bottomGroup {
+    gap: var(--sp-4);
+    max-width: min(56%, 48rem);
+  }
+  /* On desktop the CTA block and the trust line read as one unit. */
+  .bottomGroup {
+    gap: var(--sp-3);
+  }
+}
+
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.eyebrowDot {
+  width: 6px;
+  height: 6px;
+  background: var(--accent);
+  transform: rotate(45deg);
+  flex: none;
+}
+
+.headline {
+  margin: 0;
+  max-width: 100%;
+}
+
+/* Accent treatment for the single chosen keyword. */
+.headlineAccent {
+  color: var(--accent);
+  text-shadow: 0 0 42px var(--accent-glow);
+}
+
+/* ------------------------------------------------------- word-level masking
+   Each word is its own mask so the reveal staggers word by word and stays
+   correct at any width — a per-line mask would clip the moment a line wraps
+   on a narrow phone. */
+.lineRow {
+  display: block;
+}
+
+.word {
+  display: inline-block;
+  overflow: hidden;
+  /* Descenders and the outline stroke get shaved without this. */
+  padding-bottom: 0.12em;
+  margin-bottom: -0.12em;
+  margin-right: 0.22em;
+  vertical-align: bottom;
+}
+.word:last-child {
+  margin-right: 0;
+}
+.wordInner {
+  display: inline-block;
+  will-change: transform;
+}
+
+/* Sparks sit between the accent diagonal and the cutout. */
+.sparks {
+  z-index: 1;
+}
+
+/* Mobile legibility scrim. The founder's shoulders and arms run directly
+   behind the CTA block, so the lower third is graded down — softly at first,
+   so he is still clearly visible, then fully dark under the sticky bar. Sits
+   above the cutout (z 2) and below the text (z 3). */
+@media (max-width: 1023px) {
+  .hero::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 2;
+    height: 52%;
+    background: linear-gradient(
+      180deg,
+      transparent 0%,
+      color-mix(in srgb, var(--bg-0) 38%, transparent) 36%,
+      color-mix(in srgb, var(--bg-0) 80%, transparent) 68%,
+      var(--bg-0) 96%
+    );
+    pointer-events: none;
+  }
+}
+
+.sub {
+  max-width: 46ch;
+  margin: 0;
+}
+
+.ctaRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+}
+
+@media (max-width: 479px) {
+  .ctaRow > * {
+    flex: 1 1 100%;
+  }
+}
+
+.trust {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem 0;
+  padding-top: var(--sp-2);
+  border-top: 1px solid var(--line);
+  width: 100%;
+}
+
+.trustItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  /* Lifts the small caps off the photograph behind them. */
+  text-shadow:
+    0 1px 12px rgba(5, 5, 6, 0.9),
+    0 0 2px rgba(5, 5, 6, 1);
+}
+
+/* Separator belongs to the item BEFORE it, so it can never start a wrapped
+   line the way a leading separator does. */
+.trustItem:not(:last-child)::after {
+  content: '·';
+  margin-left: 0.7rem;
+  color: var(--text-faint);
+  text-shadow: none;
+}
+
+/* --------------------------------------------------------- scroll cue */
+.cue {
+  position: absolute;
+  z-index: 4;
+  left: var(--shell-pad);
+  bottom: var(--sp-4);
+  display: none;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+@media (min-width: 1024px) {
+  .cue {
+    display: inline-flex;
+  }
+}
+
+.cueLine {
+  position: relative;
+  display: block;
+  width: 1px;
+  height: 42px;
+  background: var(--line-strong);
+  overflow: hidden;
+}
+.cueLine::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--accent);
+  transform: translateY(-100%);
+  animation: cueTravel 2.4s cubic-bezier(0.7, 0, 0.3, 1) infinite;
+}
+
+@keyframes cueTravel {
+  0% {
+    transform: translateY(-100%);
+  }
+  55%,
+  100% {
+    transform: translateY(100%);
+  }
+}
+
+/* Mobile: text to the top, CTAs to the bottom, the founder showing through the
+   gap between them. Room is left at the very bottom for the sticky action bar. */
+@media (max-width: 1023px) {
+  .content {
+    padding-bottom: calc(var(--sp-5) + 74px + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cueLine::after {
+    animation: none;
+    transform: translateY(0);
+  }
+  .ghostWord,
+  .figure,
+  .slash,
+  .slashHard,
+  .wordInner {
+    will-change: auto;
+  }
+}

@@ -1,0 +1,115 @@
+/* ---------------------------------------------------------------------------
+   INTRO
+   Hard-capped at ~1.5s, skippable by any click or key, and never rendered at
+   all for prefers-reduced-motion or for a repeat visit in the same session.
+   Two panels split apart to hand the page over.
+   --------------------------------------------------------------------------- */
+
+.loader {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-loader);
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.panel {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 51%;
+  background: var(--bg-0);
+  will-change: transform;
+}
+.panelTop {
+  top: 0;
+  border-bottom: 1px solid var(--line);
+}
+.panelBottom {
+  bottom: 0;
+}
+
+/* Content sits above the panels and fades out just before they split. */
+.content {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  pointer-events: auto;
+}
+
+.markWrap {
+  position: relative;
+  width: min(56vw, 300px);
+}
+
+.mark {
+  width: 100%;
+  height: auto;
+  /* Wiped open left-to-right with clip-path: a single property, no repaint of
+     the raster itself. */
+  clip-path: inset(0 100% 0 0);
+}
+
+/* The pink slash that sweeps across during the wipe. */
+.slash {
+  position: absolute;
+  top: -30%;
+  bottom: -30%;
+  left: -10%;
+  width: 26%;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  transform: translate3d(-160%, 0, 0) rotate(9deg);
+  opacity: 0.9;
+  filter: blur(0.5px);
+}
+
+/* 0 -> 100 counter, bottom right, positioned like a timecode. */
+.counter {
+  position: absolute;
+  right: var(--shell-pad);
+  bottom: calc(var(--shell-pad) + env(safe-area-inset-bottom, 0px));
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  font-size: 0.6875rem;
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+.counterValue {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+  min-width: 3ch;
+  text-align: right;
+}
+
+.skip {
+  position: absolute;
+  left: var(--shell-pad);
+  bottom: calc(var(--shell-pad) + env(safe-area-inset-bottom, 0px));
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+/* Thin accent rule that draws left-to-right under the mark. */
+.rule {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(56vw, 300px);
+  height: 1px;
+  margin-top: min(7vw, 40px);
+  transform: translate(-50%, 0) scaleX(0);
+  transform-origin: left;
+  background: linear-gradient(90deg, var(--accent), transparent);
+}

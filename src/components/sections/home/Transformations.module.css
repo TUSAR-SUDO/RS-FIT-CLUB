@@ -1,0 +1,140 @@
+/* ---------------------------------------------------------------------------
+   TRANSFORMATIONS
+   A draggable before/after frame on the left, the story cards on the right.
+   With no consented photos on file yet, both sides render as labelled
+   placeholders — deliberately, and visibly.
+   --------------------------------------------------------------------------- */
+
+.section {
+  position: relative;
+  background: var(--bg-0);
+}
+
+.grid {
+  display: grid;
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: start;
+}
+
+@media (min-width: 1024px) {
+  .grid {
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
+  }
+}
+
+.sliderCol {
+  display: grid;
+  gap: 1rem;
+}
+
+.sliderWrap {
+  position: relative;
+}
+
+.sliderNote {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: var(--text-faint);
+}
+.sliderNote svg {
+  margin-top: 0.1rem;
+  flex: none;
+  color: var(--accent);
+}
+
+.stories {
+  display: grid;
+  gap: 0.75rem;
+}
+
+/* Placeholder-only: makes the draggable comparison visibly do something while
+   both sides are still empty frames. Remove with the real photographs. */
+.story {
+  display: grid;
+  gap: 0.5rem;
+  padding: 1.15rem 1.25rem;
+  background: var(--bg-1);
+  border: 1px solid var(--line);
+  clip-path: polygon(
+    12px 0,
+    100% 0,
+    100% calc(100% - 12px),
+    calc(100% - 12px) 100%,
+    0 100%,
+    0 12px
+  );
+  transition:
+    border-color var(--dur-3) var(--ease-out),
+    transform var(--dur-3) var(--ease-expo);
+}
+.story:hover {
+  border-color: var(--line-accent);
+  transform: translateY(-2px);
+}
+
+.storyName {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  margin: 0;
+}
+
+.storyMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 0.75rem;
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+.storyResult {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: var(--text-dim);
+}
+
+/* ---------------------------------------------------------------- empty */
+.empty {
+  display: grid;
+  gap: 0.75rem;
+  padding: 1.5rem 1.35rem;
+  background: var(--bg-1);
+  border: 1px dashed var(--line-strong);
+  clip-path: polygon(
+    14px 0,
+    100% 0,
+    100% calc(100% - 14px),
+    calc(100% - 14px) 100%,
+    0 100%,
+    0 14px
+  );
+}
+
+.emptyTitle {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.9375rem;
+  text-transform: uppercase;
+}
+
+.emptyBody {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--text-dim);
+}
+
+.stars {
+  display: inline-flex;
+  gap: 2px;
+  color: var(--accent);
+}

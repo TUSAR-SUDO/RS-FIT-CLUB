@@ -1,0 +1,186 @@
+/* ---------------------------------------------------------------------------
+   SHARED PAGE HEADER for the Phase 1 stubs.
+   These pages are intentionally empty of content, so the design has to carry
+   them: an oversized ghost title, a real breadcrumb, and a panel that explains
+   exactly what is coming and when. They should feel finished, not broken.
+   --------------------------------------------------------------------------- */
+
+.wrap {
+  position: relative;
+  padding-top: calc(var(--header-h) + clamp(2.5rem, 8vh, 5rem));
+  padding-bottom: var(--section-y);
+  overflow: clip;
+  min-height: 70svh;
+}
+
+.gridLines {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: repeating-linear-gradient(90deg, var(--line) 0 1px, transparent 1px 25%);
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.8), transparent 60%);
+  -webkit-mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.8), transparent 60%);
+}
+
+.inner {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: var(--sp-5);
+  max-width: 64rem;
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+.breadcrumb a:hover {
+  color: var(--accent);
+}
+.crumbSep {
+  color: var(--line-strong);
+}
+.crumbCurrent {
+  color: var(--accent);
+}
+
+.head {
+  position: relative;
+}
+
+.ghost {
+  position: absolute;
+  left: -0.06em;
+  top: -0.42em;
+  z-index: -1;
+  font-size: var(--fs-ghost);
+  white-space: nowrap;
+}
+
+.title {
+  margin: 0;
+  max-width: 22ch;
+}
+
+.lead {
+  margin: 0;
+  max-width: 56ch;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+/* -------------------------------------------------------- coming soon panel */
+.panel {
+  position: relative;
+  display: grid;
+  gap: 1.25rem;
+  padding: clamp(1.35rem, 3.5vw, 2.25rem);
+  background: var(--bg-1);
+  border: 1px solid var(--line);
+  clip-path: polygon(
+    20px 0,
+    100% 0,
+    100% calc(100% - 20px),
+    calc(100% - 20px) 100%,
+    0 100%,
+    0 20px
+  );
+}
+
+.panelHead {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.6rem;
+  background: var(--accent-soft);
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  font-size: 0.5625rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.panelTitle {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(1.05rem, 2.2vw, 1.4rem);
+  line-height: 1.15;
+  text-transform: uppercase;
+  letter-spacing: -0.015em;
+}
+
+.list {
+  display: grid;
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+}
+
+@media (min-width: 640px) {
+  .list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.item {
+  display: grid;
+  grid-template-columns: 30px 1fr;
+  gap: 0.7rem;
+  align-items: start;
+  padding: 0.85rem 1rem;
+  background: var(--bg-0);
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--text-dim);
+}
+
+.itemNum {
+  font-family: var(--font-display);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: var(--accent);
+  padding-top: 0.15rem;
+}
+
+.note {
+  margin: 0;
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  color: var(--text-faint);
+  max-width: 62ch;
+}
+
+/* ------------------------------------------------------------------ 404 */
+.nfWrap {
+  display: grid;
+  gap: var(--sp-4);
+  justify-items: start;
+}
+
+.joke {
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--text-dim);
+  max-width: 52ch;
+}

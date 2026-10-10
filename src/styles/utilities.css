@@ -1,0 +1,176 @@
+/* ============================================================================
+   UTILITIES — the shared visual language
+   Angular chamfered corners echo the cut-corner geometry of the logo wordmark.
+   Deliberately NOT rounded-2xl: every corner that is cut is cut at 45°, and
+   every card in the site uses the same two-corner cut (top-left + bottom-right)
+   so the language stays consistent while compositions stay varied.
+   ========================================================================== */
+
+/* --------------------------------------------------------------- chamfers */
+.cut-tl {
+  clip-path: polygon(
+    var(--ch, var(--chamfer)) 0,
+    100% 0,
+    100% 100%,
+    0 100%,
+    0 var(--ch, var(--chamfer))
+  );
+}
+.cut-br {
+  clip-path: polygon(
+    0 0,
+    100% 0,
+    100% calc(100% - var(--ch, var(--chamfer))),
+    calc(100% - var(--ch, var(--chamfer))) 100%,
+    0 100%
+  );
+}
+/* The house cut: top-left AND bottom-right. */
+.cut {
+  clip-path: polygon(
+    var(--ch, var(--chamfer)) 0,
+    100% 0,
+    100% calc(100% - var(--ch, var(--chamfer))),
+    calc(100% - var(--ch, var(--chamfer))) 100%,
+    0 100%,
+    0 var(--ch, var(--chamfer))
+  );
+}
+.cut-all {
+  clip-path: polygon(
+    var(--ch, var(--chamfer)) 0,
+    calc(100% - var(--ch, var(--chamfer))) 0,
+    100% var(--ch, var(--chamfer)),
+    100% calc(100% - var(--ch, var(--chamfer))),
+    calc(100% - var(--ch, var(--chamfer))) 100%,
+    var(--ch, var(--chamfer)) 100%,
+    0 calc(100% - var(--ch, var(--chamfer))),
+    0 var(--ch, var(--chamfer))
+  );
+}
+/* Diagonal shear used for the marquee bands and section-leading edges. */
+.cut-diag-t {
+  clip-path: polygon(var(--ch, var(--chamfer)) 0, 100% 0, 100% 100%, 0 100%);
+}
+.cut-diag-b {
+  clip-path: polygon(0 0, 100% 0, calc(100% - var(--ch, var(--chamfer))) 100%, 0 100%);
+}
+
+/* -------------------------------------------------------------- hairlines */
+.hairline {
+  height: var(--stroke);
+  width: 100%;
+  background: var(--line);
+  border: 0;
+}
+.hairline--accent {
+  background: linear-gradient(90deg, var(--accent), transparent);
+}
+.hairline--v {
+  width: var(--stroke);
+  height: 100%;
+  background: var(--line);
+}
+
+/* ------------------------------------------------------- placeholder tokens
+   Anything the club still has to supply renders as [LIKE THIS] with a dashed
+   accent underline, so a page can never quietly ship invented data as if it
+   were real. It doubles as the client's to-do list, visible on the page. */
+.token {
+  color: var(--accent);
+  border-bottom: 1px dashed color-mix(in srgb, var(--accent) 60%, transparent);
+  padding-bottom: 0.05em;
+  font-style: normal;
+  cursor: help;
+}
+
+/* A 1px rule with a label sitting in it: "——— 03 / PROGRAMS ———" */
+.rule-label {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+}
+.rule-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+}
+
+/* -------------------------------------------------------------- surfaces */
+.surface-1 {
+  background: var(--bg-1);
+}
+.surface-2 {
+  background: var(--bg-2);
+}
+
+.panel {
+  position: relative;
+  background: var(--bg-1);
+  border: var(--stroke) solid var(--line);
+}
+.panel--lift {
+  box-shadow: 0 24px 60px -32px rgba(0, 0, 0, 0.9);
+}
+
+/* Inner top highlight — reads as a machined edge rather than a shadow. */
+.edge-top {
+  position: relative;
+}
+.edge-top::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--line-strong), transparent);
+}
+
+/* ------------------------------------------------------------------ tinted
+   Accent slab used behind portrait frames and stat blocks. */
+.accent-slab {
+  background: linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent) 55%, #000));
+}
+
+/* ------------------------------------------------------------- skew accent
+   The one big diagonal. Rotated like the reference's energy, but built from
+   the logo's angular R instead of a generic gradient blob. */
+.slash {
+  position: absolute;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    var(--accent),
+    color-mix(in srgb, var(--accent) 40%, transparent)
+  );
+  transform: rotate(var(--slash-rot, -14deg));
+  transform-origin: center;
+}
+
+/* ------------------------------------------------------ responsive helpers */
+.only-mobile {
+  display: block;
+}
+.only-desktop {
+  display: none;
+}
+@media (min-width: 1024px) {
+  .only-mobile {
+    display: none;
+  }
+  .only-desktop {
+    display: block;
+  }
+}
+
+/* ------------------------------------------------------- no-jank image swap */
+.media-frame {
+  position: relative;
+  overflow: hidden;
+  background: var(--bg-2);
+}
+.media-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}

@@ -1,0 +1,24 @@
+/* ---------------------------------------------------------------------------
+   PHOTO
+   The frame is the section's; this element just fills it. `object-fit: cover`
+   plus a 100% height keeps every photo flush with the chamfered clip-path that
+   the calling section applies, and `display: block` removes the baseline gap
+   that would otherwise leave a sliver of background under each image.
+   --------------------------------------------------------------------------- */
+
+.picture {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* A hair of contrast and a touch less saturation so photos sit inside the
+     dark palette instead of glowing out of it. */
+  filter: saturate(0.94) contrast(1.04);
+  background: var(--bg-2);
+}

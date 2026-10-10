@@ -1,0 +1,67 @@
+/* ---------------------------------------------------------------------------
+   The founder cutout. Rendered at its true aspect ratio, never cropped by
+   CSS, and lifted off the background with a soft accent rim-light that sits
+   behind the PNG's own alpha (a blurred radial, not a filter on the image,
+   so the phone never runs a large blur on a full-height bitmap).
+   --------------------------------------------------------------------------- */
+
+.figure {
+  position: relative;
+  display: block;
+  margin: 0;
+  pointer-events: none;
+}
+
+.figure img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  user-select: none;
+  -webkit-user-drag: none;
+  /* A hair of contrast so the cutout reads against the near-black bg. */
+  filter: contrast(1.04) saturate(1.02);
+}
+
+/* Rim light: an accent glow behind the subject, positioned high so it lifts
+   the head and shoulders off the black background specifically. Assertive on
+   purpose — against a #050506 backdrop the cutout needs separating. */
+.figure::before {
+  content: '';
+  position: absolute;
+  inset: 0 2% 10% 8%;
+  z-index: -1;
+  background: radial-gradient(
+    56% 46% at 60% 30%,
+    color-mix(in srgb, var(--accent) 52%, transparent) 0%,
+    color-mix(in srgb, var(--accent) 14%, transparent) 45%,
+    transparent 72%
+  );
+  filter: blur(30px);
+  opacity: 0.75;
+  border-radius: 50%;
+}
+
+/* A hard accent edge behind the shoulder, echoing the logo's angular R. */
+.figure--edge::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  top: 12%;
+  bottom: 4%;
+  right: 6%;
+  width: 26%;
+  transform: skewX(-11deg);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--accent) 30%, transparent),
+    transparent
+  );
+  opacity: 0.5;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .figure::before {
+    filter: none;
+    opacity: 0.35;
+  }
+}

@@ -1,0 +1,217 @@
+/* ---------------------------------------------------------------------------
+   TIMETABLE
+   Desktop gets a real seven-column grid with a hover highlight across the row.
+   Phones never get a shrunken table — they get day tabs over a vertical list,
+   which is the only honest way to show a schedule on a 390px screen.
+   --------------------------------------------------------------------------- */
+
+.section {
+  position: relative;
+  background: var(--bg-0);
+}
+
+/* ------------------------------------------------------------ desktop grid */
+.deskGrid {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .deskGrid {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+  }
+}
+
+.deskDay {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  background: var(--bg-1);
+  min-height: 260px;
+}
+
+.deskDayHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.85rem 0.9rem;
+  background: var(--bg-2);
+  border-bottom: 1px solid var(--line);
+}
+
+.deskDayName {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.deskDayCount {
+  font-size: 0.625rem;
+  color: var(--text-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+.session {
+  display: grid;
+  gap: 0.4rem;
+  padding: 0.8rem 0.9rem;
+  background: var(--bg-1);
+  border-left: 2px solid transparent;
+  transition:
+    background-color var(--dur-2) var(--ease-out),
+    border-color var(--dur-2) var(--ease-out);
+  text-align: left;
+}
+
+.session:hover {
+  background: var(--bg-2);
+  border-left-color: var(--accent);
+}
+
+.sessionTime {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--text-dim);
+  font-variant-numeric: tabular-nums;
+}
+
+.sessionName {
+  font-size: 0.8125rem;
+  line-height: 1.3;
+  color: var(--text);
+}
+
+.chip {
+  justify-self: start;
+  padding: 0.15rem 0.4rem;
+  font-size: 0.5625rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+
+/* Focus coding, built from the single accent plus neutral weight so the
+   palette never grows a second hue. */
+.chipStrength {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+.chipCardio {
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--text);
+}
+.chipDance {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.chipCoach {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.chipOpen {
+  border-color: var(--line-strong);
+  color: var(--text-faint);
+}
+
+.emptyDay {
+  padding: 0.8rem 0.9rem;
+  font-size: 0.75rem;
+  color: var(--text-faint);
+}
+
+/* ------------------------------------------------------------ mobile tabs */
+.mobileWrap {
+  display: block;
+}
+
+@media (min-width: 1024px) {
+  .mobileWrap {
+    display: none;
+  }
+}
+
+.tabs {
+  display: flex;
+  gap: 0.4rem;
+  overflow-x: auto;
+  padding-bottom: 0.75rem;
+  scrollbar-width: none;
+}
+.tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.tab {
+  flex: none;
+  min-width: 56px;
+  min-height: 44px;
+  padding: 0.5rem 0.75rem;
+  font-family: var(--font-display);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  background: var(--bg-1);
+  border: 1px solid var(--line);
+  transition:
+    color var(--dur-2) var(--ease-out),
+    background-color var(--dur-2) var(--ease-out),
+    border-color var(--dur-2) var(--ease-out);
+}
+
+.tab[aria-selected='true'] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-ink);
+}
+
+.list {
+  display: grid;
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+}
+
+.mobileSession {
+  display: grid;
+  grid-template-columns: 74px 1fr;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.85rem 0.9rem;
+  background: var(--bg-1);
+}
+
+/* ------------------------------------------------------------------ notes */
+.note {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  padding: 0.85rem 1rem;
+  border: 1px dashed var(--line-strong);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--text-dim);
+}
+.note svg {
+  margin-top: 0.15rem;
+  flex: none;
+  color: var(--accent);
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}

@@ -1,0 +1,175 @@
+/* ---------------------------------------------------------------------------
+   MEET THE FOUNDER
+   An editorial split, not a card. The portrait sits on a hard accent slab that
+   is deliberately offset in the other direction, with a ghost word bleeding
+   behind it, and a pull quote in the type size of a headline. The image
+   parallaxes slowly; the text reveals in sequence.
+   --------------------------------------------------------------------------- */
+
+.section {
+  position: relative;
+  overflow: clip;
+  background: var(--bg-0);
+}
+
+.grid {
+  display: grid;
+  gap: clamp(2.5rem, 6vw, 5rem);
+  align-items: center;
+}
+
+@media (min-width: 900px) {
+  .grid {
+    grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+    gap: clamp(2rem, 5vw, 5.5rem);
+  }
+}
+
+/* -------------------------------------------------------------- portrait */
+.portraitCol {
+  position: relative;
+  order: 2;
+}
+
+@media (min-width: 900px) {
+  .portraitCol {
+    order: 1;
+  }
+}
+
+.frame {
+  position: relative;
+  isolation: isolate;
+}
+
+/* The offset slab behind the portrait — the logo's angular edge, expressed as
+   a block of colour rather than a rounded card. */
+.slab {
+  position: absolute;
+  z-index: 0;
+  inset: 9% -6% -6% 12%;
+  /* Deliberately a tint rather than a block of flat magenta: at full strength
+     the slab swallowed the portrait instead of framing it. */
+  background: linear-gradient(
+    150deg,
+    color-mix(in srgb, var(--accent) 62%, #000),
+    color-mix(in srgb, var(--accent) 26%, #000)
+  );
+  clip-path: polygon(
+    18px 0,
+    100% 0,
+    100% calc(100% - 18px),
+    calc(100% - 18px) 100%,
+    0 100%,
+    0 18px
+  );
+  opacity: 0.62;
+}
+
+.figure {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  width: 100%;
+}
+
+.figure img {
+  width: 100%;
+  height: auto;
+}
+
+/* A hairline box drawn around the portrait, offset the opposite way to the
+   slab: the two frames crossing is what makes the composition feel designed. */
+.outline {
+  position: absolute;
+  z-index: 2;
+  inset: -12px -12px auto auto;
+  width: 38%;
+  aspect-ratio: 1;
+  border-top: 1px solid var(--line-strong);
+  border-right: 1px solid var(--line-strong);
+  pointer-events: none;
+}
+
+.ghost {
+  position: absolute;
+  z-index: 0;
+  left: -0.1em;
+  bottom: -0.12em;
+  font-size: var(--fs-ghost-xl);
+  white-space: nowrap;
+}
+
+/* -------------------------------------------------------------- copy */
+.copy {
+  display: grid;
+  gap: var(--sp-4);
+  align-content: center;
+}
+
+.quote {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.15rem, 2.6vw, 1.85rem);
+  line-height: 1.28;
+  letter-spacing: -0.015em;
+  color: var(--text);
+  text-wrap: pretty;
+  padding-left: var(--sp-3);
+  border-left: 2px solid var(--accent);
+}
+
+.name {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--text);
+}
+
+.role {
+  color: var(--text-faint);
+}
+
+.bio {
+  display: grid;
+  gap: var(--sp-3);
+  margin: 0;
+  max-width: 52ch;
+  color: var(--text-dim);
+  line-height: 1.7;
+  font-size: 0.9375rem;
+}
+
+.creds {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.cred {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 0.7rem;
+  border: 1px dashed color-mix(in srgb, var(--accent) 45%, transparent);
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.signature {
+  font-family: var(--font-display);
+  font-size: 0.8125rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .figure {
+    will-change: auto;
+  }
+}

@@ -1,0 +1,95 @@
+/* ---------------------------------------------------------------------------
+   SECTION HEAD
+   Left-aligned editorial heading: a numbered micro-label on a hairline, then
+   a display title with the supporting copy sitting in a narrow right column
+   that is bottom-aligned to the title's baseline. Never centred.
+   --------------------------------------------------------------------------- */
+
+.head {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  gap: var(--sp-4);
+  margin-bottom: var(--sp-6);
+}
+
+.labelRow {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+}
+
+.labelRow::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+}
+
+.labelIndex {
+  color: var(--accent);
+}
+
+/* Desktop: a real 12-column split — the headline owns 8 columns, the support
+   copy sits in the last 4, bottom-aligned to the headline's last baseline. */
+@media (min-width: 1024px) {
+  .head {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: clamp(1.5rem, 3vw, 2.5rem);
+    align-items: end;
+    margin-bottom: var(--sp-10);
+  }
+  .labelRow {
+    grid-column: 1 / -1;
+  }
+  .title {
+    grid-column: 1 / span 8;
+  }
+  .aside {
+    grid-column: 9 / -1;
+    padding-bottom: 0.4rem;
+  }
+  /* With no supporting column the heading may use the full measure. */
+  .head--asideLess .title {
+    grid-column: 1 / -1;
+  }
+  .head--tight .aside {
+    padding-bottom: 0;
+  }
+}
+
+.title {
+  margin: 0;
+  max-width: 26ch;
+}
+
+.aside {
+  display: grid;
+  gap: var(--sp-3);
+  justify-items: start;
+}
+
+.lead {
+  margin: 0;
+  max-width: 46ch;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+}
+
+/* Ghost word sitting behind the heading, aligned to the left gutter.
+   The top offset is deliberately small: sections that pin themselves clip at
+   the viewport edge, and a ghost word pushed further up gets sliced off mid-
+   letter, which reads as a rendering bug rather than a design choice. */
+.ghost {
+  position: absolute;
+  left: calc(var(--shell-pad) * -0.4);
+  top: -0.24em;
+  z-index: -1;
+  font-size: var(--fs-ghost);
+  opacity: 0.75;
+  white-space: nowrap;
+}

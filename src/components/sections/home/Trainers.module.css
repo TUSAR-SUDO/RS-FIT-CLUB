@@ -1,0 +1,188 @@
+/* ---------------------------------------------------------------------------
+   TRAINERS
+   Deliberately NOT the identical portrait grid from the reference. Cards end
+   at different heights (a staggered column offset on desktop), so the row
+   reads as a team rather than a contact sheet. Hover reveals the speciality on
+   desktop; a tap expands it on phones.
+   --------------------------------------------------------------------------- */
+
+.section {
+  position: relative;
+  background: var(--bg-1);
+  border-block: 1px solid var(--line);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(0.75rem, 2vw, 1.5rem);
+}
+
+@media (min-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  /* Stagger: every second card drops, breaking the row of aligned baselines. */
+  .card:nth-child(even) {
+    margin-top: clamp(1.5rem, 4vw, 3.5rem);
+  }
+}
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: var(--bg-0);
+  border: 1px solid var(--line);
+  text-align: left;
+  width: 100%;
+  transition:
+    border-color var(--dur-3) var(--ease-out),
+    transform var(--dur-3) var(--ease-expo);
+  clip-path: polygon(
+    12px 0,
+    100% 0,
+    100% calc(100% - 12px),
+    calc(100% - 12px) 100%,
+    0 100%,
+    0 12px
+  );
+}
+
+.card:hover,
+.cardOpen {
+  border-color: var(--line-accent);
+  transform: translateY(-3px);
+}
+
+/* One stretched toggle per card so the hit area is the whole tile. */
+.stretcher {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .stretcher {
+    display: none;
+  }
+}
+
+.photo {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Tall / short alternation keeps the silhouettes uneven. */
+.card:nth-child(odd) .photo {
+  aspect-ratio: 4 / 5;
+}
+.card:nth-child(even) .photo {
+  aspect-ratio: 4 / 4.4;
+}
+
+.photoInner {
+  position: absolute;
+  inset: 0;
+  transition: transform var(--dur-4) var(--ease-expo);
+}
+.card:hover .photoInner {
+  transform: scale(1.035);
+}
+
+.meta {
+  display: grid;
+  gap: 0.35rem;
+  padding: 0 0.25rem 0.25rem;
+}
+
+.name {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.8125rem;
+  line-height: 1.2;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+}
+
+.speciality {
+  margin: 0;
+  font-size: 0.75rem;
+  line-height: 1.45;
+  color: var(--text-dim);
+}
+
+/* The accent rule that draws in under the name. */
+.rule {
+  display: block;
+  height: 1px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--dur-4) var(--ease-expo);
+}
+.card:hover .rule,
+.cardOpen .rule {
+  transform: scaleX(1);
+}
+
+/* Phones: the speciality is revealed by a tap, animated with a grid-rows
+   transition so the card height animates without measuring anything. */
+.expand {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--dur-3) var(--ease-out);
+}
+.cardOpen .expand {
+  grid-template-rows: 1fr;
+}
+.expandInner {
+  overflow: hidden;
+}
+
+.tapHint {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.5625rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .tapHint {
+    display: none;
+  }
+  /* On desktop the detail is always legible; hover just enhances it. */
+  .expand {
+    grid-template-rows: 1fr;
+  }
+}
+
+.hint {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin-top: var(--sp-5);
+  padding: 1rem 1.15rem;
+  border: 1px dashed var(--line-strong);
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  color: var(--text-dim);
+}
+.hint svg {
+  margin-top: 0.15rem;
+  flex: none;
+  color: var(--accent);
+}
