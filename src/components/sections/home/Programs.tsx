@@ -4,10 +4,12 @@ import { siteConfig } from '../../../data/siteConfig';
 import type { Program } from '../../../data/siteConfig';
 import { useLead } from '../../../context/lead';
 import { useMediaQuery, useReducedMotion } from '../../../hooks/useMediaQuery';
+import { useSpotlight } from '../../../hooks/useSpotlight';
 import { gsap, useGSAP } from '../../../lib/gsap';
 import { SectionHead } from '../../ui/SectionHead';
 import { Button } from '../../ui/Button';
 import { Icon } from '../../ui/Icon';
+import { Photo } from '../../ui/Photo';
 import { cx } from '../../../utils/cx';
 import styles from './Programs.module.css';
 
@@ -27,7 +29,15 @@ function ProgramCard({
   onFocus: () => void;
 }) {
   return (
-    <article className={styles.card} data-active={active} onFocusCapture={onFocus}>
+    <article className={styles.card} data-active={active} onFocusCapture={onFocus} data-spotlight>
+      {/* The card is a photograph with the copy sitting on it. Both layers are
+          decorative-plus-text: the media is aria-hidden, the copy keeps the
+          card's real name, so a screen reader reads the same thing as before. */}
+      <span className={styles.cardMedia} aria-hidden="true">
+        <Photo slug={program.photo} sizes="(min-width: 1024px) 380px, 78vw" />
+      </span>
+      <span className={styles.cardScrim} aria-hidden="true" />
+
       <div className={styles.cardTop}>
         <span className={styles.numeral} aria-hidden="true">
           {program.numeral}
@@ -69,6 +79,9 @@ export function Programs() {
   const isDesktop = useMediaQuery('(min-width: 1024px)');
   const reduced = useReducedMotion();
   const { startLead } = useLead();
+
+  /* Cards light up under the pointer — see src/hooks/useSpotlight.ts. */
+  useSpotlight(root, reduced);
 
   /* ------------------------------------------------- desktop pinned scene */
   useGSAP(

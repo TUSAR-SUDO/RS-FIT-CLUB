@@ -93,6 +93,92 @@ PHOTOS: dict[str, dict] = {
         "alt": "Nutritionist planning a diet",
         "credit": "Pexels 16216729",
     },
+    # ------------------------------------------------------------------ cards
+    # Backgrounds for the eight programme cards (home rail + /programs grid).
+    # Portrait 4:5, because that is the card's own shape and the crop has to
+    # survive a full-bleed cover on both of them.
+    "program-weight-training": {
+        "ratio": 4 / 5,
+        "ax": 0.5,
+        "ay": 0.35,
+        "widths": [440, 660, 880],
+        "alt": "Dumbbell curl in the free-weights area",
+        "credit": "Pexels 35649992",
+    },
+    "program-strength-training": {
+        "ratio": 4 / 5,
+        "ax": 0.5,
+        "ay": 0.45,
+        "widths": [440, 660, 880],
+        "alt": "Back squat under a loaded barbell",
+        "credit": "Pexels 29259728",
+    },
+    "program-cardio": {
+        "ratio": 4 / 5,
+        "ax": 0.5,
+        "ay": 0.4,
+        "widths": [440, 660, 880],
+        "alt": "Treadmill session on the cardio line",
+        "credit": "Pexels 4944975",
+    },
+    "program-zumba": {
+        "ratio": 4 / 5,
+        "ax": 0.5,
+        "ay": 0.5,
+        "widths": [440, 660, 880],
+        "alt": "Dance fitness class mid-routine",
+        "credit": "Pexels 8957662",
+    },
+    "program-aerobics": {
+        "ratio": 4 / 5,
+        "ax": 0.45,
+        "ay": 0.5,
+        "widths": [440, 660, 880],
+        "alt": "Group aerobics class following the instructor",
+        "credit": "Pexels 6339345",
+    },
+    "program-personal-training": {
+        "ratio": 4 / 5,
+        "ax": 0.5,
+        "ay": 0.45,
+        "widths": [440, 660, 880],
+        "alt": "Coach counting reps for one client",
+        "credit": "Pexels 37963581",
+    },
+    "program-diet-planning": {
+        "ratio": 4 / 5,
+        "ax": 0.5,
+        "ay": 0.35,
+        "widths": [440, 660, 880],
+        "alt": "Plate of home food with nuts, fruit and grains",
+        "credit": "Pexels 5966434",
+    },
+    "program-exercise-card": {
+        "ratio": 4 / 5,
+        "ax": 0.5,
+        "ay": 0.5,
+        "widths": [440, 660, 880],
+        "alt": "Exercise card on the bench beside a dumbbell",
+        "credit": "Pexels 8154264",
+    },
+    # ------------------------------------------------------- bento tile images
+    # The two wide cells in the "Why this floor" bento are roughly 2.1:1.
+    "bento-one-to-one": {
+        "ratio": 2.1,
+        "ax": 0.5,
+        "ay": 0.45,
+        "widths": [560, 840, 1120],
+        "alt": "Coach teaching a member the barbell setup",
+        "credit": "Pexels 39219656",
+    },
+    "bento-class": {
+        "ratio": 2.1,
+        "ax": 0.5,
+        "ay": 0.5,
+        "widths": [560, 840, 1120],
+        "alt": "Group class working through a floor routine",
+        "credit": "Pexels 6740297",
+    },
 }
 
 

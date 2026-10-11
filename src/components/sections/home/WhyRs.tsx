@@ -26,7 +26,7 @@ export function WhyRs() {
       if (reduced) return;
       /* The gym-floor shot wipes open on scroll rather than fading in: it reads
          as a camera shutter, which suits a gym, and it is a single property. */
-      const tween = gsap.fromTo(
+      const photoTween = gsap.fromTo(
         `.${styles.photoClip}`,
         { clipPath: 'inset(0 0 100% 0)' },
         {
@@ -36,9 +36,31 @@ export function WhyRs() {
           scrollTrigger: { trigger: `.${styles.photoCell}`, start: 'top 82%', once: true },
         },
       );
+
+      /* The two image tiles wipe in from the side, one after the other, each
+         settling out of a slight zoom — the same shutter language as the floor
+         shot, turned ninety degrees so the block does not read as one gesture. */
+      const tiles = gsap.utils.toArray<HTMLElement>(`.${styles.tileClip}`, root.current);
+      const tileTween = tiles.length
+        ? gsap.fromTo(
+            tiles,
+            { clipPath: 'inset(0 0 0 100%)', scale: 1.12 },
+            {
+              clipPath: 'inset(0 0 0 0%)',
+              scale: 1,
+              duration: 1.15,
+              ease: 'expo.out',
+              stagger: 0.14,
+              scrollTrigger: { trigger: `.${styles.bento}`, start: 'top 80%', once: true },
+            },
+          )
+        : null;
+
       return () => {
-        tween.scrollTrigger?.kill();
-        tween.kill();
+        photoTween.scrollTrigger?.kill();
+        photoTween.kill();
+        tileTween?.scrollTrigger?.kill();
+        tileTween?.kill();
       };
     },
     { scope: root, dependencies: [reduced] },
@@ -84,6 +106,24 @@ export function WhyRs() {
               <p className={styles.cellBody}>{item.body}</p>
             </div>
           ))}
+
+          {/* The two gaps the grid used to leave are photographs rather than
+              empty background: the coach with one client, and a class in
+              motion. Both are decorative — the copy beside them does the
+              talking — so they stay out of the accessibility tree. */}
+          <div className={cx(styles.cell, styles.tileCell, styles.tileA)}>
+            <span className={styles.tileClip} aria-hidden="true">
+              <Photo slug="bento-one-to-one" sizes="(min-width: 1024px) 30vw, 100vw" />
+            </span>
+            <span className={styles.tileCaption}>One coach, one set, every rep counted</span>
+          </div>
+
+          <div className={cx(styles.cell, styles.tileCell, styles.tileB)}>
+            <span className={styles.tileClip} aria-hidden="true">
+              <Photo slug="bento-class" sizes="(min-width: 1024px) 30vw, 100vw" />
+            </span>
+            <span className={styles.tileCaption}>Classes run inside the same membership</span>
+          </div>
 
           {/* Counters only render once there are real numbers behind them. */}
           <div className={cx(styles.cell, styles.statCell)}>

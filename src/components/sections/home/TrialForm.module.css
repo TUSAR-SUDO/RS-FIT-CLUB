@@ -445,12 +445,39 @@
   color: var(--accent);
 }
 
+/* The map is drawn in place: it fades up as the tiles arrive rather than
+   popping in mid-scroll. */
+.mapWrap {
+  display: grid;
+  opacity: 0;
+  transform: translateY(6px);
+  transition:
+    opacity var(--dur-4) var(--ease-out),
+    transform var(--dur-4) var(--ease-out);
+}
+.mapWrap[data-loaded] {
+  opacity: 1;
+  transform: none;
+}
+
 .mapFrame {
   width: 100%;
   min-height: 320px;
   border: 0;
   display: block;
+  /* Desaturated and darkened so a bright Google map sits inside the palette
+     instead of glowing out of the card. */
   filter: grayscale(1) contrast(1.1) brightness(0.8);
+}
+
+.mapFoot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.35rem 1rem;
+  padding: 0.7rem 1rem;
+  border-top: 1px solid var(--line);
 }
 
 .mapNote {
@@ -459,6 +486,37 @@
   font-size: 0.75rem;
   line-height: 1.5;
   color: var(--text-faint);
+}
+
+.mapFoot .mapNote {
+  padding: 0;
+  border-top: 0;
+}
+
+.mapLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.mapLink svg {
+  transition: transform var(--dur-2) var(--ease-out);
+}
+
+.mapLink:hover svg {
+  transform: translateX(3px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mapWrap,
+  .mapLink svg {
+    transition: none;
+  }
 }
 
 /* ------------------------------------------------------------ error box */

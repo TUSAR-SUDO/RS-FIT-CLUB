@@ -77,6 +77,66 @@ import team_nutrition_webp_320 from '../assets/img/team-nutrition-320.webp';
 import team_nutrition_webp_480 from '../assets/img/team-nutrition-480.webp';
 import team_nutrition_webp_640 from '../assets/img/team-nutrition-640.webp';
 import team_nutrition_webp_800 from '../assets/img/team-nutrition-800.webp';
+import program_weight_training_avif_440 from '../assets/img/program-weight-training-440.avif';
+import program_weight_training_avif_660 from '../assets/img/program-weight-training-660.avif';
+import program_weight_training_avif_880 from '../assets/img/program-weight-training-880.avif';
+import program_weight_training_webp_440 from '../assets/img/program-weight-training-440.webp';
+import program_weight_training_webp_660 from '../assets/img/program-weight-training-660.webp';
+import program_weight_training_webp_880 from '../assets/img/program-weight-training-880.webp';
+import program_strength_training_avif_440 from '../assets/img/program-strength-training-440.avif';
+import program_strength_training_avif_660 from '../assets/img/program-strength-training-660.avif';
+import program_strength_training_avif_880 from '../assets/img/program-strength-training-880.avif';
+import program_strength_training_webp_440 from '../assets/img/program-strength-training-440.webp';
+import program_strength_training_webp_660 from '../assets/img/program-strength-training-660.webp';
+import program_strength_training_webp_880 from '../assets/img/program-strength-training-880.webp';
+import program_cardio_avif_440 from '../assets/img/program-cardio-440.avif';
+import program_cardio_avif_660 from '../assets/img/program-cardio-660.avif';
+import program_cardio_avif_880 from '../assets/img/program-cardio-880.avif';
+import program_cardio_webp_440 from '../assets/img/program-cardio-440.webp';
+import program_cardio_webp_660 from '../assets/img/program-cardio-660.webp';
+import program_cardio_webp_880 from '../assets/img/program-cardio-880.webp';
+import program_zumba_avif_440 from '../assets/img/program-zumba-440.avif';
+import program_zumba_avif_660 from '../assets/img/program-zumba-660.avif';
+import program_zumba_avif_880 from '../assets/img/program-zumba-880.avif';
+import program_zumba_webp_440 from '../assets/img/program-zumba-440.webp';
+import program_zumba_webp_660 from '../assets/img/program-zumba-660.webp';
+import program_zumba_webp_880 from '../assets/img/program-zumba-880.webp';
+import program_aerobics_avif_440 from '../assets/img/program-aerobics-440.avif';
+import program_aerobics_avif_660 from '../assets/img/program-aerobics-660.avif';
+import program_aerobics_avif_880 from '../assets/img/program-aerobics-880.avif';
+import program_aerobics_webp_440 from '../assets/img/program-aerobics-440.webp';
+import program_aerobics_webp_660 from '../assets/img/program-aerobics-660.webp';
+import program_aerobics_webp_880 from '../assets/img/program-aerobics-880.webp';
+import program_personal_training_avif_440 from '../assets/img/program-personal-training-440.avif';
+import program_personal_training_avif_660 from '../assets/img/program-personal-training-660.avif';
+import program_personal_training_avif_880 from '../assets/img/program-personal-training-880.avif';
+import program_personal_training_webp_440 from '../assets/img/program-personal-training-440.webp';
+import program_personal_training_webp_660 from '../assets/img/program-personal-training-660.webp';
+import program_personal_training_webp_880 from '../assets/img/program-personal-training-880.webp';
+import program_diet_planning_avif_440 from '../assets/img/program-diet-planning-440.avif';
+import program_diet_planning_avif_660 from '../assets/img/program-diet-planning-660.avif';
+import program_diet_planning_avif_880 from '../assets/img/program-diet-planning-880.avif';
+import program_diet_planning_webp_440 from '../assets/img/program-diet-planning-440.webp';
+import program_diet_planning_webp_660 from '../assets/img/program-diet-planning-660.webp';
+import program_diet_planning_webp_880 from '../assets/img/program-diet-planning-880.webp';
+import program_exercise_card_avif_440 from '../assets/img/program-exercise-card-440.avif';
+import program_exercise_card_avif_660 from '../assets/img/program-exercise-card-660.avif';
+import program_exercise_card_avif_880 from '../assets/img/program-exercise-card-880.avif';
+import program_exercise_card_webp_440 from '../assets/img/program-exercise-card-440.webp';
+import program_exercise_card_webp_660 from '../assets/img/program-exercise-card-660.webp';
+import program_exercise_card_webp_880 from '../assets/img/program-exercise-card-880.webp';
+import bento_one_to_one_avif_560 from '../assets/img/bento-one-to-one-560.avif';
+import bento_one_to_one_avif_840 from '../assets/img/bento-one-to-one-840.avif';
+import bento_one_to_one_avif_1120 from '../assets/img/bento-one-to-one-1120.avif';
+import bento_one_to_one_webp_560 from '../assets/img/bento-one-to-one-560.webp';
+import bento_one_to_one_webp_840 from '../assets/img/bento-one-to-one-840.webp';
+import bento_one_to_one_webp_1120 from '../assets/img/bento-one-to-one-1120.webp';
+import bento_class_avif_560 from '../assets/img/bento-class-560.avif';
+import bento_class_avif_840 from '../assets/img/bento-class-840.avif';
+import bento_class_avif_1120 from '../assets/img/bento-class-1120.avif';
+import bento_class_webp_560 from '../assets/img/bento-class-560.webp';
+import bento_class_webp_840 from '../assets/img/bento-class-840.webp';
+import bento_class_webp_1120 from '../assets/img/bento-class-1120.webp';
 
 export const PHOTOS: Record<string, Photo> = {
   'floor-wide': {
@@ -141,4 +201,94 @@ export const PHOTOS: Record<string, Photo> = {
     src: team_nutrition_webp_800,
     avif: [`${team_nutrition_avif_320} 320w`, `${team_nutrition_avif_480} 480w`, `${team_nutrition_avif_640} 640w`, `${team_nutrition_avif_800} 800w`].join(', '),
     webp: [`${team_nutrition_webp_320} 320w`, `${team_nutrition_webp_480} 480w`, `${team_nutrition_webp_640} 640w`, `${team_nutrition_webp_800} 800w`].join(', '),
+  },
+  'program-weight-training': {
+    alt: "Dumbbell curl in the free-weights area",
+    credit: "Pexels 35649992",
+    width: 880,
+    height: 1100,
+    src: program_weight_training_webp_880,
+    avif: [`${program_weight_training_avif_440} 440w`, `${program_weight_training_avif_660} 660w`, `${program_weight_training_avif_880} 880w`].join(', '),
+    webp: [`${program_weight_training_webp_440} 440w`, `${program_weight_training_webp_660} 660w`, `${program_weight_training_webp_880} 880w`].join(', '),
+  },
+  'program-strength-training': {
+    alt: "Back squat under a loaded barbell",
+    credit: "Pexels 29259728",
+    width: 880,
+    height: 1100,
+    src: program_strength_training_webp_880,
+    avif: [`${program_strength_training_avif_440} 440w`, `${program_strength_training_avif_660} 660w`, `${program_strength_training_avif_880} 880w`].join(', '),
+    webp: [`${program_strength_training_webp_440} 440w`, `${program_strength_training_webp_660} 660w`, `${program_strength_training_webp_880} 880w`].join(', '),
+  },
+  'program-cardio': {
+    alt: "Treadmill session on the cardio line",
+    credit: "Pexels 4944975",
+    width: 880,
+    height: 1100,
+    src: program_cardio_webp_880,
+    avif: [`${program_cardio_avif_440} 440w`, `${program_cardio_avif_660} 660w`, `${program_cardio_avif_880} 880w`].join(', '),
+    webp: [`${program_cardio_webp_440} 440w`, `${program_cardio_webp_660} 660w`, `${program_cardio_webp_880} 880w`].join(', '),
+  },
+  'program-zumba': {
+    alt: "Dance fitness class mid-routine",
+    credit: "Pexels 8957662",
+    width: 880,
+    height: 1100,
+    src: program_zumba_webp_880,
+    avif: [`${program_zumba_avif_440} 440w`, `${program_zumba_avif_660} 660w`, `${program_zumba_avif_880} 880w`].join(', '),
+    webp: [`${program_zumba_webp_440} 440w`, `${program_zumba_webp_660} 660w`, `${program_zumba_webp_880} 880w`].join(', '),
+  },
+  'program-aerobics': {
+    alt: "Group aerobics class following the instructor",
+    credit: "Pexels 6339345",
+    width: 880,
+    height: 1100,
+    src: program_aerobics_webp_880,
+    avif: [`${program_aerobics_avif_440} 440w`, `${program_aerobics_avif_660} 660w`, `${program_aerobics_avif_880} 880w`].join(', '),
+    webp: [`${program_aerobics_webp_440} 440w`, `${program_aerobics_webp_660} 660w`, `${program_aerobics_webp_880} 880w`].join(', '),
+  },
+  'program-personal-training': {
+    alt: "Coach counting reps for one client",
+    credit: "Pexels 37963581",
+    width: 880,
+    height: 1100,
+    src: program_personal_training_webp_880,
+    avif: [`${program_personal_training_avif_440} 440w`, `${program_personal_training_avif_660} 660w`, `${program_personal_training_avif_880} 880w`].join(', '),
+    webp: [`${program_personal_training_webp_440} 440w`, `${program_personal_training_webp_660} 660w`, `${program_personal_training_webp_880} 880w`].join(', '),
+  },
+  'program-diet-planning': {
+    alt: "Plate of home food with nuts, fruit and grains",
+    credit: "Pexels 5966434",
+    width: 880,
+    height: 1100,
+    src: program_diet_planning_webp_880,
+    avif: [`${program_diet_planning_avif_440} 440w`, `${program_diet_planning_avif_660} 660w`, `${program_diet_planning_avif_880} 880w`].join(', '),
+    webp: [`${program_diet_planning_webp_440} 440w`, `${program_diet_planning_webp_660} 660w`, `${program_diet_planning_webp_880} 880w`].join(', '),
+  },
+  'program-exercise-card': {
+    alt: "Exercise card on the bench beside a dumbbell",
+    credit: "Pexels 8154264",
+    width: 880,
+    height: 1100,
+    src: program_exercise_card_webp_880,
+    avif: [`${program_exercise_card_avif_440} 440w`, `${program_exercise_card_avif_660} 660w`, `${program_exercise_card_avif_880} 880w`].join(', '),
+    webp: [`${program_exercise_card_webp_440} 440w`, `${program_exercise_card_webp_660} 660w`, `${program_exercise_card_webp_880} 880w`].join(', '),
+  },
+  'bento-one-to-one': {
+    alt: "Coach teaching a member the barbell setup",
+    credit: "Pexels 39219656",
+    width: 1120,
+    height: 533,
+    src: bento_one_to_one_webp_1120,
+    avif: [`${bento_one_to_one_avif_560} 560w`, `${bento_one_to_one_avif_840} 840w`, `${bento_one_to_one_avif_1120} 1120w`].join(', '),
+    webp: [`${bento_one_to_one_webp_560} 560w`, `${bento_one_to_one_webp_840} 840w`, `${bento_one_to_one_webp_1120} 1120w`].join(', '),
+  },
+  'bento-class': {
+    alt: "Group class working through a floor routine",
+    credit: "Pexels 6740297",
+    width: 1120,
+    height: 533,
+    src: bento_class_webp_1120,
+    avif: [`${bento_class_avif_560} 560w`, `${bento_class_avif_840} 840w`, `${bento_class_avif_1120} 1120w`].join(', '),
+    webp: [`${bento_class_webp_560} 560w`, `${bento_class_webp_840} 840w`, `${bento_class_webp_1120} 1120w`].join(', '),
   },};

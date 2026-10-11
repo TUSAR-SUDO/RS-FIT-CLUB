@@ -5,7 +5,13 @@
      · phones   — native scroll-snap carousel with momentum and a progress bar
    Pinning a touch device fights the platform's own momentum scrolling, so it
    is never done here. `data-mode` switches between the two.
-   =========================================================================== */
+
+   Each card is a photograph with the copy set on it. Layering, bottom to top:
+     0  .cardMedia    the photo, slow zoom on hover / while centred
+     1  .cardScrim    the gradient that keeps the copy legible
+     2  the copy      numeral, icon, title, benefit, detail, footer
+     3  the highlight accent wash, pointer spotlight and sheen (all decorative)
+   ========================================================================== */
 
 .section {
   position: relative;
@@ -68,6 +74,7 @@
 /* --------------------------------------------------------------- card */
 .card {
   position: relative;
+  isolation: isolate;
   flex: none;
   display: flex;
   flex-direction: column;
@@ -80,9 +87,79 @@
   scroll-snap-align: center;
   transition:
     border-color var(--dur-3) var(--ease-out),
-    background-color var(--dur-3) var(--ease-out),
     transform var(--dur-3) var(--ease-expo);
   overflow: hidden;
+}
+
+/* ---------------------------------------------------------------- media */
+.cardMedia {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.cardMedia img {
+  /* The photo fills the card and drifts in slowly while the pointer is on it,
+     and sits at 1.04 by default so the edges never look flush with the frame.
+     It is also lifted a little: the scrim below has to stay dark enough for
+     white type, so the separation comes from the photo being brighter. */
+  transform: scale(1.04);
+  filter: saturate(0.98) contrast(1.05) brightness(1.14);
+  transition: transform 1.2s var(--ease-out);
+}
+
+.card:hover .cardMedia img,
+.card:focus-within .cardMedia img,
+.card[data-active='true'] .cardMedia img {
+  transform: scale(1.09);
+}
+
+/* A single soft band of light crossing the frame on hover. */
+.cardMedia::after {
+  content: '';
+  position: absolute;
+  inset: -30% -60%;
+  background: linear-gradient(
+    68deg,
+    transparent 38%,
+    color-mix(in srgb, var(--text) 9%, transparent) 50%,
+    transparent 62%
+  );
+  transform: translate3d(-38%, 0, 0);
+  opacity: 0;
+  transition:
+    transform 1.1s var(--ease-out),
+    opacity var(--dur-3) var(--ease-out);
+  pointer-events: none;
+}
+
+.card:hover .cardMedia::after,
+.card:focus-within .cardMedia::after,
+.card[data-active='true'] .cardMedia::after {
+  opacity: 1;
+  transform: translate3d(38%, 0, 0);
+}
+
+/* The gradient the copy sits on: light over the numeral, near-opaque by the
+   time the title, benefit and detail arrive, so white type stays at AA
+   contrast even over the brightest frame in the set. */
+.cardScrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--bg-0) 26%, transparent) 0%,
+      color-mix(in srgb, var(--bg-0) 54%, transparent) 24%,
+      color-mix(in srgb, var(--bg-0) 78%, transparent) 48%,
+      color-mix(in srgb, var(--bg-0) 93%, transparent) 72%,
+      color-mix(in srgb, var(--bg-0) 99%, transparent) 100%
+    ),
+    linear-gradient(90deg, color-mix(in srgb, var(--bg-0) 34%, transparent), transparent 60%);
+  transition: opacity var(--dur-3) var(--ease-out);
+  pointer-events: none;
 }
 
 @media (min-width: 1024px) {
@@ -93,16 +170,18 @@
   }
 }
 
-/* A diagonal accent wash that slides up on hover — the only "fill" effect. */
+/* A diagonal accent wash that slides up on hover, sitting over the scrim and
+   under the copy. */
 .card::before {
   content: '';
   position: absolute;
   inset: auto 0 0 0;
   height: 62%;
+  z-index: 2;
   background: linear-gradient(
     180deg,
     transparent,
-    color-mix(in srgb, var(--accent) 13%, transparent)
+    color-mix(in srgb, var(--accent) 16%, transparent)
   );
   transform: translateY(28%) skewY(-5deg);
   transform-origin: bottom;
@@ -113,17 +192,48 @@
   pointer-events: none;
 }
 
+/* The pointer highlight: a warm pool of accent light that follows the cursor
+   across the card. Centre comes from --mx/--my, written by useSpotlight. */
+.card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  background: radial-gradient(
+    260px circle at var(--mx, 50%) var(--my, 0%),
+    color-mix(in srgb, var(--accent) 24%, transparent),
+    transparent 68%
+  );
+  opacity: 0;
+  transition: opacity var(--dur-3) var(--ease-out);
+  pointer-events: none;
+}
+
 .card:hover,
 .card:focus-within,
 .card[data-active='true'] {
   border-color: var(--line-accent);
-  background: var(--bg-2);
 }
 .card:hover::before,
 .card:focus-within::before,
 .card[data-active='true']::before {
   opacity: 1;
   transform: translateY(0) skewY(-5deg);
+}
+.card:hover::after,
+.card:focus-within::after,
+.card[data-active='true']::after {
+  opacity: 1;
+}
+
+/* --------------------------------------------------------------- the copy */
+.cardTop,
+.cardTitle,
+.benefit,
+.detail,
+.cardFoot {
+  position: relative;
+  z-index: 4;
 }
 
 /* Active card on the mobile carousel lifts slightly. */
@@ -287,5 +397,19 @@
   .track,
   .progressBar {
     will-change: auto;
+  }
+  /* The photo still fills the card — it just stops moving. */
+  .cardMedia img,
+  .cardMedia::after,
+  .card::before {
+    transition: none;
+  }
+  .card:hover .cardMedia img,
+  .card:focus-within .cardMedia img,
+  .card[data-active='true'] .cardMedia img {
+    transform: scale(1.04);
+  }
+  .cardMedia::after {
+    display: none;
   }
 }

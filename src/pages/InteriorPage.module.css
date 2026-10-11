@@ -157,6 +157,90 @@
   border-color: var(--line-strong);
 }
 
+/* --------------------------------------------------- image-backed cards
+   The programme grid is the one place a card carries its own photograph: the
+   copy sits on the image behind a gradient. Layers, bottom to top:
+     0  .cardMedia   the photograph, slow zoom on hover
+     1  .cardScrim   the gradient that keeps the copy readable
+     2  the copy     icon, numeral, title, body, list, button
+     3  the pointer highlight (decorative)
+   Everything except the two media layers is lifted above them by the rule
+   below, so the markup order can stay the reading order. */
+.cardImage {
+  isolation: isolate;
+  overflow: hidden;
+  background: var(--bg-0);
+}
+
+.cardImage > *:not(.cardMedia):not(.cardScrim) {
+  position: relative;
+  z-index: 2;
+}
+
+.cardMedia {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.cardMedia img {
+  transform: scale(1.03);
+  transition: transform 1.1s var(--ease-out);
+}
+
+.cardImage:hover .cardMedia img,
+.cardImage:focus-within .cardMedia img {
+  transform: scale(1.08);
+}
+
+.cardScrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--bg-0) 52%, transparent) 0%,
+      color-mix(in srgb, var(--bg-0) 76%, transparent) 30%,
+      color-mix(in srgb, var(--bg-0) 92%, transparent) 58%,
+      color-mix(in srgb, var(--bg-0) 98%, transparent) 100%
+    ),
+    linear-gradient(90deg, color-mix(in srgb, var(--bg-0) 42%, transparent), transparent 62%);
+  pointer-events: none;
+}
+
+.cardImage::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  background: radial-gradient(
+    300px circle at var(--mx, 50%) var(--my, 0%),
+    color-mix(in srgb, var(--accent) 20%, transparent),
+    transparent 68%
+  );
+  opacity: 0;
+  transition: opacity var(--dur-3) var(--ease-out);
+  pointer-events: none;
+}
+
+.cardImage:hover::after,
+.cardImage:focus-within::after {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cardMedia img,
+  .cardImage::after {
+    transition: none;
+  }
+  .cardImage:hover .cardMedia img,
+  .cardImage:focus-within .cardMedia img {
+    transform: scale(1.03);
+  }
+}
+
 .cardFeatured {
   border-color: var(--accent);
   background: linear-gradient(

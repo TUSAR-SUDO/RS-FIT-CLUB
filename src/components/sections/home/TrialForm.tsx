@@ -457,44 +457,45 @@ export function TrialForm() {
             </div>
           </div>
 
-          {/* Map: never loaded until asked for. On a 4G phone in Bhubaneswar an
-              embedded map is normally a megabyte the visitor did not ask for. */}
+          {/* The map draws in the box itself. It is still `loading="lazy"`, so a
+              phone pays for the Google iframe only once this card is close to
+              the viewport — the visitor gets the map without a second tap. */}
           <div className={styles.mapSlot}>
             {isReal(siteConfig.location.mapsEmbedUrl) ? (
-              /* An embed URL is configured, but it is still only loaded on a tap:
-                 a third-party iframe costs the visitor data before they have
-                 decided whether they are coming. */
-              mapLoaded ? (
-                <div>
-                  <iframe
-                    className={styles.mapFrame}
-                    src={siteConfig.location.mapsEmbedUrl}
-                    title={`Map showing ${siteConfig.business.spokenName} in ${siteConfig.business.city}`}
-                    loading="lazy"
-                    referrerPolicy="no-referrer-when-downgrade"
-                  />
-                  <p className={styles.mapNote}>
-                    {siteConfig.business.area}, {siteConfig.business.city}
-                  </p>
-                </div>
-              ) : (
-                <button
-                  type="button"
-                  className={styles.mapButton}
-                  onClick={() => {
+              <div className={styles.mapWrap} data-loaded={mapLoaded || undefined}>
+                <iframe
+                  className={styles.mapFrame}
+                  src={siteConfig.location.mapsEmbedUrl}
+                  title={`Map showing ${siteConfig.business.spokenName} in ${siteConfig.business.city}`}
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  onLoad={() => {
                     setMapLoaded(true);
                     trackEvent('map_load', { where: 'trial-form' });
                   }}
-                >
-                  <span className={styles.mapButtonIcon} aria-hidden="true">
-                    <Icon name="pin" size={18} />
+                />
+
+                <div className={styles.mapFoot}>
+                  <span className={styles.mapNote}>
+                    {siteConfig.location.landmark}, {siteConfig.location.area},{' '}
+                    {siteConfig.business.city} {siteConfig.location.pin}
                   </span>
-                  <span className="micro">Load map</span>
-                  <span style={{ maxWidth: '34ch', color: 'var(--text-faint)' }}>
-                    We only load the map if you ask for it — it saves your data until then.
-                  </span>
-                </button>
-              )
+                  {isReal(siteConfig.location.mapsDirectionsUrl) ? (
+                    <a
+                      className={styles.mapLink}
+                      href={siteConfig.location.mapsDirectionsUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      onClick={() =>
+                        trackEvent('cta_click', { source: 'trial-form', kind: 'maps' })
+                      }
+                    >
+                      Directions
+                      <Icon name="arrow-right" size={13} />
+                    </a>
+                  ) : null}
+                </div>
+              </div>
             ) : isReal(siteConfig.location.mapsDirectionsUrl) ? (
               /* No embed URL: hand the visitor the club's own Google listing
                  instead of framing a map we cannot point at a pin. */

@@ -130,6 +130,62 @@
   pointer-events: none;
 }
 
+/* ------------------------------------------------------------- image tiles
+   Two photograph cells that fill the gaps the bento used to leave either side
+   of the one-to-one card. They wipe in from the right on scroll (GSAP writes
+   the clip-path) and zoom a little under the pointer. */
+.tileCell {
+  padding: 0;
+  min-height: 168px;
+  grid-column: span 2;
+}
+
+/* On the six-column desktop grid the flow leaves two gaps: beside the
+   one-to-one card (row 3, columns 2-3) and under the class cards (row 3,
+   columns 5-6). The tiles are placed into those two cells by hand, because
+   auto-placement would rather start a new row than backtrack. Below 1024px
+   they simply flow in order. */
+@media (min-width: 1024px) {
+  .tileA {
+    grid-column: 2 / span 2;
+    grid-row: 3;
+  }
+
+  .tileB {
+    grid-column: 5 / span 2;
+    grid-row: 3;
+  }
+}
+
+.tileClip {
+  position: absolute;
+  inset: 0;
+  transform-origin: center;
+  will-change: clip-path;
+}
+
+.tileClip img {
+  transition: transform 1.1s var(--ease-out);
+}
+
+.tileCell:hover .tileClip img {
+  transform: scale(1.06);
+}
+
+.tileCaption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  padding: 1.2rem 1rem 0.8rem;
+  background: linear-gradient(0deg, rgba(5, 5, 6, 0.92), transparent);
+  font-size: 0.75rem;
+  line-height: 1.4;
+  color: var(--text-dim);
+  pointer-events: none;
+}
+
 /* -------------------------------------------------------------- stat cell */
 .statCell {
   grid-column: span 2;
@@ -185,4 +241,15 @@
   margin-top: 0.15rem;
   flex: none;
   color: var(--accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tileClip {
+    will-change: auto;
+  }
+  .tileClip img,
+  .tileCell:hover .tileClip img {
+    transition: none;
+    transform: none;
+  }
 }

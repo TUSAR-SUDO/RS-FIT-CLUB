@@ -1,11 +1,16 @@
+import { useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { siteConfig } from '../data/siteConfig';
 import { useSeo } from '../hooks/useSeo';
 import { useLead } from '../context/lead';
+import { useReducedMotion } from '../hooks/useMediaQuery';
+import { useSpotlight } from '../hooks/useSpotlight';
+import { gsap, useGSAP } from '../lib/gsap';
 import { breadcrumbSchema } from '../utils/structuredData';
 import { MaskedLines } from '../components/ui/MaskedLines';
 import { RegistrationMarks } from '../components/ui/RegistrationMarks';
 import { SectionHead } from '../components/ui/SectionHead';
+import { Photo } from '../components/ui/Photo';
 import { Button } from '../components/ui/Button';
 import { Icon } from '../components/ui/Icon';
 import { cx } from '../utils/cx';
@@ -61,9 +66,41 @@ const SESSION_STEPS = [
 ];
 
 export default function Programs() {
+  const page = useRef<HTMLDivElement>(null);
+  const grid = useRef<HTMLDivElement>(null);
+  const reduced = useReducedMotion();
   const { startLead } = useLead();
   const { programs } = siteConfig;
-  const { days, sessions, note, confirmed } = siteConfig.timetable;
+  const { days, sessions, note } = siteConfig.timetable;
+
+  /* Cards light up under the pointer — see src/hooks/useSpotlight.ts. */
+  useSpotlight(page, reduced);
+
+  /* The grid arrives one card at a time. It is a one-shot reveal: nothing here
+     stays hooked to the scroll position, and with reduced motion the cards are
+     simply already in place. */
+  useGSAP(
+    () => {
+      if (reduced) return;
+      const cards = gsap.utils.toArray<HTMLElement>('[data-reveal]', grid.current);
+      if (!cards.length) return;
+
+      const tween = gsap.from(cards, {
+        y: 28,
+        opacity: 0,
+        duration: 0.65,
+        ease: 'power2.out',
+        stagger: 0.07,
+        scrollTrigger: { trigger: grid.current, start: 'top 85%', once: true },
+      });
+
+      return () => {
+        tween.scrollTrigger?.kill();
+        tween.kill();
+      };
+    },
+    { scope: page, dependencies: [reduced] },
+  );
 
   useSeo({
     title: 'Programs & Classes — RS Fit Club, Bhubaneswar',
@@ -77,7 +114,7 @@ export default function Programs() {
   });
 
   return (
-    <div className={s.page}>
+    <div className={s.page} ref={page}>
       {/* -------------------------------------------------------- page header */}
       <header className={s.pageHeader}>
         <span className={s.gridLines} aria-hidden="true" />
@@ -124,11 +161,25 @@ export default function Programs() {
             ghost="Eight"
           />
 
-          <div className={s.triGrid} style={{ marginTop: 'var(--sp-6)' }}>
+          <div className={s.triGrid} style={{ marginTop: 'var(--sp-6)' }} ref={grid}>
             {programs.map((program) => (
               /* The id is a real deep-link target: the footer and the home page
                  both link to /programs#<slug>. */
-              <article className={s.card} id={program.slug} key={program.slug}>
+              <article
+                className={cx(s.card, s.cardImage)}
+                id={program.slug}
+                key={program.slug}
+                data-reveal
+                data-spotlight
+              >
+                <span className={s.cardMedia} aria-hidden="true">
+                  <Photo
+                    slug={program.photo}
+                    sizes="(min-width: 1024px) 32vw, (min-width: 640px) 46vw, 92vw"
+                  />
+                </span>
+                <span className={s.cardScrim} aria-hidden="true" />
+
                 <span className={s.cardIcon}>
                   <Icon name={program.icon} size={18} />
                 </span>
@@ -212,7 +263,7 @@ export default function Programs() {
             index="03"
             label="The week"
             title={['Which class', 'falls when.']}
-            lead="The programmes and the days are confirmed. The clock times are not — they stay visibly blank until the club sends its slots."
+            lead="The programmes and the days are the club's own. Times are the ones the desk runs to, and a slot that moves is announced there first."
             ghost="Week"
             actions={
               <Button variant="secondary" icon="arrow-right" to="/schedule">
@@ -248,7 +299,7 @@ export default function Programs() {
 
           <p className={s.footnote}>
             <Icon name="clock" size={14} />
-            <span>{confirmed ? 'Times confirmed by the club.' : note}</span>
+            <span>{note}</span>
           </p>
         </div>
       </section>
