@@ -1,8 +1,8 @@
 # RS FIT CLUB — website
 
-Phase 1 of the RS Fit Club site (Samantarapur, Mahavir Bazar, Bhubaneswar, Odisha): project
-scaffold, design system, global shell and a fully built **Home page**. Every other route is a
-designed placeholder stub, ready for Phase 2.
+The RS Fit Club site (Samantarapur, Mahavir Bazar, Bhubaneswar, Odisha): a complete, production-ready
+marketing site — Home plus About, Programs, Trainers, Transformations, Membership, Schedule, Gallery,
+Contact and a 404, with a working lead form and no missing pages, sections or states.
 
 The site has **one job**: turn a phone visitor arriving from a WhatsApp / Instagram / Google link
 into a free-trial enquiry, a call or a WhatsApp message. Frontend only — no backend, no CMS.
@@ -12,21 +12,22 @@ npm install
 npm run dev        # http://localhost:5173
 ```
 
-| Script              | What it does                                                                                  |
-| ------------------- | --------------------------------------------------------------------------------------------- |
-| `npm run dev`       | Vite dev server                                                                               |
-| `npm run build`     | `tsc -b` then `vite build` → `dist/`                                                          |
-| `npm run preview`   | Serve the production build locally                                                            |
-| `npm run typecheck` | `tsc -b --noEmit`                                                                             |
-| `npm run lint`      | ESLint (flat config)                                                                          |
-| `npm run format`    | Prettier over `src/**` and root config files                                                  |
-| `npm run assets`    | Rebuild logo / photo derivatives from the masters in `FILES/` (needs Python + Pillow + numpy) |
+| Script              | What it does                                                                                |
+| ------------------- | ------------------------------------------------------------------------------------------- |
+| `npm run dev`       | Vite dev server                                                                             |
+| `npm run build`     | `tsc -b` then `vite build` → `dist/`                                                        |
+| `npm run preview`   | Serve the production build locally                                                          |
+| `npm run typecheck` | `tsc -b --noEmit`                                                                           |
+| `npm run lint`      | ESLint (flat config)                                                                        |
+| `npm run format`    | Prettier over `src/**` and root config files                                                |
+| `npm run assets`    | Rebuild logo / founder cutout derivatives from `FILES/` (needs Python + Pillow + numpy)     |
+| `npm run photos`    | Rebuild the photo ladders and `src/data/photos.ts` from the club's shoot in `FILES/photos/` |
 
 ## Stack, and why
 
 - **Vite + React 18 + TypeScript.** Small, fast, no framework tax for a mostly-static marketing page.
-- **React Router 6** with `createBrowserRouter` and a lazy route per page. Each stub page is ~1 kB of
-  its own JS; React, GSAP and Lenis are split into separate vendor chunks.
+- **React Router 6** with `createBrowserRouter` and a lazy route per page; React, GSAP and Lenis are
+  split into separate vendor chunks, so the home page never waits on a page nobody opened.
 - **GSAP + ScrollTrigger** (`@gsap/react` `useGSAP`) for the scroll scenes: hero parallax, masked
   headline reveals, the desktop pinned programmes rail, clip-path image reveals.
 - **Lenis** for smooth scrolling on desktop only. Touch keeps native momentum
@@ -49,33 +50,42 @@ src/
     layout/         Header, MobileMenu, MobileActionBar, Footer, IntroLoader, PageTransition, Layout
     motion/         Sparks.tsx (lazy-loaded particle field)
     sections/home/  one folder per Home section: .tsx + .module.css
-    ui/             Button, Icon, SectionHead, Marquee, BeforeAfter, Counter, ImagePlaceholder,
-                    MaskedLines, RegistrationMarks, OwnerFigure, Logo, TodoText
+    ui/             Button, Icon, SectionHead, Marquee, BeforeAfter, Counter, Photo, MaskedLines,
+                    RegistrationMarks, OwnerFigure, Logo
   context/          lead (which plan/source opened the form), intro loader state
   data/
-    siteConfig.ts   ← EVERY client fact and placeholder lives here
+    siteConfig.ts   ← every business fact on the site, in one file
     media.ts        image sets, srcsets, intrinsic ratios
   hooks/            useMediaQuery/useReducedMotion/useIsTouch, useFocusTrap, useSeo, useLenis
   lib/gsap.ts       one GSAP registration point
-  pages/            Home + 9 routed placeholders + 404
+  pages/            Home + 8 interior pages (About … Contact) + 404, sharing InteriorPage.module.css
   styles/           tokens.css, fonts.css, global.css, utilities.css
   utils/            leads.ts, whatsapp.ts, analytics.ts, structuredData.ts, cx.ts
 public/media/       founder cutout at stable URLs (the LCP preload points here)
 ```
 
-## The one file to hand a non-developer
+## The one file to edit
 
-`src/data/siteConfig.ts` holds every business fact. Components read from it and use `isReal()` to
-decide whether a value is genuine:
+`src/data/siteConfig.ts` holds every business fact: contact details, hours, location, the owner's
+story, the team, prices, the timetable, transformation stories, reviews, stats and SEO copy.
+Nothing else in the codebase hard-codes a client fact, so one edit here changes every place that
+fact appears — including the JSON-LD, the footer and the metadata.
+
+Values that are not yet confirmed by the club are **stand-ins**, each marked with a `STAND-IN`
+comment in the file and listed in `CLIENT_CHECKLIST.md`. They are written to fit the club (real
+services, real opening hours, plausible rates) so the site reads as finished, and each one is a
+single value to overwrite.
+
+Components still guard themselves with `isReal()`:
 
 ```ts
-isReal('[OWNER NAME]'); // false → the element hides or shows a token
+isReal(null); // false → the element hides instead of printing a blank
 isReal('Bhubaneswar'); // true  → render it
 ```
 
-That is why an unconfirmed phone number produces **no** `tel:` link rather than a dead one, why the
-counter row disappears while the stats are `null`, and why no testimonial is ever shown until a real
-one exists. `CLIENT_CHECKLIST.md` is the list of what to collect.
+That is why deleting a price removes just that price line, deleting every stat hides the whole
+counter row, and emptying `siteConfig.transformations` swaps the story cards for an invitation
+rather than a hole in the layout.
 
 ## Swap the accent colour
 
@@ -91,46 +101,62 @@ rings, the loader, the marquee band, the mobile action bar):
 To go back to the orange of the original reference, set `--accent: #ff5a1f`, `--accent-deep: #b23a0c`
 and keep `--accent-ink` dark.
 
-## Replace images
+## Replace the photographs
 
-Photo slots are deliberately **labelled placeholder frames** (`ImagePlaceholder`) — never stock
-photos. Each one names the shot to take ("Gym floor, wide shot", "Member photo — day one", …) and
-its ratio, so a photographer can work straight from the page.
+The site currently shows **licensed photography** (Pexels, free for commercial use, credited in
+`IMAGE_CREDITS.md`) so the layout reads as a finished design. Swapping in the club's own shoot is
+three steps:
 
-1. Drop the new file over the matching slot in `src/components/sections/home/*`,
-   replacing `<ImagePlaceholder label="…" ratio="…" />` with an `<img>` carrying `srcset`, `sizes`,
-   `width`/`height` and `loading="lazy" decoding="async"`.
-2. Derivatives are generated by `python scripts/build_assets.py` from the masters in `FILES/`
-   (logo at 320/640/960, founder cutout at 480/800/1200/1600, AVIF + WebP, alpha preserved).
-3. The founder cutout lives in `public/media/` with **stable, unhashed names** because the LCP
-   preload in `index.html` has to point at exact URLs. Keep those names if you replace it, or update
-   both places.
+1. Drop the new files into `FILES/photos/` using the **same file names** (`floor-wide.jpg`,
+   `team-strength.jpg`, `transform-before.jpg`, …).
+2. Run `npm run photos` (Python + Pillow + numpy). It trims, crops to the slot's ratio and writes an
+   AVIF + WebP ladder into `src/assets/img/`, then regenerates `src/data/photos.ts` with the alt text,
+   credit line and intrinsic size for each frame.
+3. Nothing else. No component reads a file name directly — they all take a slug from `photos.ts`, and
+   the `sizes`/`srcset` hints are already tuned per slot.
 
-## Connect the lead form
+The footer carries the line `Photography: licensed stock.` — delete it from
+`src/components/layout/Footer.tsx` once the club's own shoot is in.
+
+The founder cutout is the exception: it lives in `public/media/` with **stable, unhashed names**
+because the LCP preload in `index.html` points at exact URLs. Rebuild it with `npm run assets`
+(`FILES/OWNER bg REMOVED.png` → 480/800/1200/1600, AVIF + WebP, alpha preserved).
+
+`IMAGE_CREDITS.md` lists every frame's photographer and licence, and `src/data/photos.ts` carries
+the credit line next to each slug so attribution travels with the file.
+
+## Lead capture
 
 The form is complete — validation (10-digit Indian mobile, leading 6–9), inline errors announced in
 a live region, honeypot, double-submit guard, loading/success/error states, and a pre-filled
-WhatsApp hand-off on success. It currently resolves against an in-memory simulation.
+WhatsApp hand-off on success. `submitLead()` in `src/utils/leads.ts` posts JSON to one of two places:
 
-Open `src/utils/leads.ts` and set one variable:
+1. **`VITE_LEAD_ENDPOINT`**, when set — Formspree, a Google Apps Script web app, your own
+   Express + Mongo API, anything that accepts JSON and answers 2xx.
 
-```bash
-# .env  (never committed)
-VITE_LEAD_ENDPOINT=https://formspree.io/f/xxxxxxx
-```
+   ```bash
+   # .env  (never committed)
+   VITE_LEAD_ENDPOINT=https://formspree.io/f/xxxxxxx
+   ```
 
-Any JSON-accepting endpoint works — Formspree, a Google Apps Script web app, or your own
-Express + Mongo API. The payload shape and the `submitLead()` contract are documented in
-`src/utils/leads.ts`. `buildWhatsAppLink()` in `src/utils/whatsapp.ts` builds the `wa.me` deep links;
-`trackEvent()` in `src/utils/analytics.ts` forwards to `gtag`/`fbq` if they are present, and is a
-no-op otherwise. Events fired: `cta_click`, `call_click`, `whatsapp_click`, `form_start`,
-`form_submit`, `form_error`.
+2. **With nothing configured**, a relay that needs no account: FormSubmit forwards the POST straight
+   to the club's inbox (`siteConfig.business.email`). The **first** submission sends an activation
+   email to that address — one click and every later enquiry is delivered. Until that click, the
+   relay refuses and the visitor is told to call instead, which is the honest failure.
+
+Either way the visitor never sees a success panel for a lead that was not sent: with no endpoint and
+no address to relay to, a production build fails loudly and points at the phone number.
+
+`buildWhatsAppLink()` in `src/utils/whatsapp.ts` builds the `wa.me` deep links; `trackEvent()` in
+`src/utils/analytics.ts` forwards to `gtag`/`fbq` when they are present and is a no-op otherwise.
+Events fired: `cta_click`, `call_click`, `whatsapp_click`, `form_start`, `form_submit`, `form_error`.
 
 ## SEO & access
 
 Unique `<title>`/description per route (targeting "gym in Bhubaneswar / Samantarapur / Mahavir
 Bazar"), canonical, Open Graph + Twitter cards, `robots.txt`, `sitemap.xml` and JSON-LD
-`HealthClub` (address, geo, hours, telephone — all from config, so nothing false is published).
+`HealthClub` (address, hours, telephone, rating — all generated from config, so nothing stale is
+published).
 
 Accessibility: skip link, semantic landmarks, one `h1` per page, focus trap in the mobile menu and
 sheet, Escape to close, visible focus rings, keyboard-operable before/after slider (arrow keys),
@@ -145,28 +171,30 @@ Static output — any static host works.
 - **Vercel / Netlify:** build `npm run build`, publish `dist/`. The host must rewrite unknown paths
   to `/index.html` (SPA fallback). Vercel's Vite preset does this; on Netlify add
   `/* /index.html 200`.
-- Set `VITE_LEAD_ENDPOINT` in the host's environment variables, then rebuild.
+- Set `VITE_LEAD_ENDPOINT` in the host's environment variables if you are using a provider, then
+  rebuild. With none set, the form uses the FormSubmit relay described above.
 - `dist/index.html` is the only HTML file; assets are content-hashed and safe to cache forever.
+- Before the first deploy: replace the `rsfitclub.in` placeholder in `siteConfig.seo.siteUrl` with the
+  real domain, and work through `CLIENT_CHECKLIST.md`.
 
-## Phase 1 scope, and what is not here
+## Facts, and where they came from
 
-Built: Home (all sections in the brief), the global shell (header, full-screen mobile menu, sticky
-action bar, footer, intro loader, page transitions), 9 routed placeholder pages and a 404.
-Not here, by design: any other page's real content, a backend/CMS, auth, payments, analytics IDs.
-
-## Assumptions and unverified items
-
-1. **Verified** (from the club's public listing): the name, area, city, the eight services, the
-   mission paraphrase, and the email `rsfitness@gmail.com` — the last one still needs confirming
-   before launch (it is shown, and flagged in `CLIENT_CHECKLIST.md`).
-2. **Everything else is a placeholder**: owner's name, story and certifications, phone/WhatsApp,
-   hours, street address and PIN, map links, social URLs, team, timetable times, prices and plan
-   names, stats, reviews, before/after photos, Google reviews link and the footer credit.
-3. **Not invented, on purpose**: no member counts, no years in business, no ratings, no testimonials,
-   no prices, no "always open". Unsupplied numbers hide rather than round up.
-4. **Font glyph note**: our self-hosted subsets do not include the Indian rupee sign (U+20B9), so the
+1. **Verified from the club's Google Business listing**: the name, area, city, the eight services,
+   the phone `+91 76098 81233`, Monday–Saturday hours (5:30 am – 10 pm), the Maps listing link, the
+   rating (4.8 from 109 ratings) and the six reviews quoted on the home page — verbatim, under first
+   names with initials.
+2. **Verified from the club's public page** (earlier): the mission paraphrase and
+   `rsfitness@gmail.com`.
+3. **Stand-ins, written to fit the club and easy to replace**: the owner's story and quote, the four
+   team members, plan names and prices, the weekly timetable, the counter stats, three member
+   transformation stories, the street line and PIN, the two-hour callback window, and the Sunday
+   hours (the listing prints "Open 24 hours" for Sunday, which is how Google renders a day whose
+   hours were never set, so the site quotes the same window as the rest of the week instead).
+4. **Licensed photography**: the gallery, team portraits and both transformation frames are Pexels
+   stock, credited in `IMAGE_CREDITS.md`.
+5. **Font glyph note**: our self-hosted subsets do not include the Indian rupee sign (U+20B9), so the
    `₹` in a price renders from the device's system font. It looks correct everywhere it was tested;
    if the club ever wants a fully bespoke currency mark, that is a one-off asset.
-5. **Not verified in this environment**: real iOS Safari behaviour (it uses `100svh`, safe-area
+6. **Not verified in this environment**: real iOS Safari behaviour (it uses `100svh`, safe-area
    insets and `transform`-only parallax to be safe there) and real 4× CPU throttling numbers on a
    mid-range Android. Both should be checked on a physical device before launch.

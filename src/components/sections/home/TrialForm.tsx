@@ -1,5 +1,5 @@
 import { useId, useRef, useState } from 'react';
-import { hasPhone, isReal, siteConfig } from '../../../data/siteConfig';
+import { hasPhone, hoursLine, isReal, siteConfig } from '../../../data/siteConfig';
 import { LEAD_SECTION_ID, useLead } from '../../../context/lead';
 import { useReducedMotion } from '../../../hooks/useMediaQuery';
 import { gsap, useGSAP } from '../../../lib/gsap';
@@ -9,8 +9,6 @@ import { trackEvent } from '../../../utils/analytics';
 import { SectionHead } from '../../ui/SectionHead';
 import { Button } from '../../ui/Button';
 import { Icon } from '../../ui/Icon';
-import { TodoText } from '../../ui/TodoText';
-import { ImagePlaceholder } from '../../ui/ImagePlaceholder';
 import { cx } from '../../../utils/cx';
 import styles from './TrialForm.module.css';
 
@@ -176,12 +174,13 @@ export function TrialForm() {
               <h3 className={styles.successTitle}>You are on the list</h3>
 
               <p className={styles.successBody}>
-                {resultMessage}{' '}
-                <TodoText text={`We call back within ${siteConfig.contact.responseWindow}.`} />
+                {resultMessage} We call back within {siteConfig.contact.responseWindow} during
+                opening hours.
               </p>
 
-              {/* Only invite a WhatsApp message once the club's number exists —
-                  otherwise the sentence points at a channel that is not live. */}
+              {/* The WhatsApp hand-off is the highest-intent next step for this
+                  audience, so it is offered whenever there is a number to open
+                  a chat with (buildWhatsAppLink returns null when there is not). */}
               <p className={styles.successBody}>
                 {whatsapp ? (
                   <>
@@ -190,7 +189,11 @@ export function TrialForm() {
                     will reply with trial slots.
                   </>
                 ) : (
-                  <TodoText text="A WhatsApp hand-off sits here the moment the club's number is on file." />
+                  <>
+                    Want to move faster? Call {siteConfig.contact.phoneDisplay} and mention{' '}
+                    {values.goal ? `your goal (${values.goal.toLowerCase()})` : 'your goal'} — the
+                    desk will read out the next trial slots.
+                  </>
                 )}
               </p>
 
@@ -419,13 +422,7 @@ export function TrialForm() {
               </span>
               <span>
                 <span className={styles.infoLabel}>Hours</span>
-                <span className={styles.infoValue}>
-                  {siteConfig.hours.alwaysOpen ? (
-                    'Open 24 hours'
-                  ) : (
-                    <TodoText text="[OPENING HOURS]" />
-                  )}
-                </span>
+                <span className={styles.infoValue}>{hoursLine}</span>
               </span>
             </div>
 
@@ -441,7 +438,7 @@ export function TrialForm() {
                       {siteConfig.contact.phoneDisplay}
                     </a>
                   ) : (
-                    <TodoText text={siteConfig.contact.phoneDisplay} />
+                    siteConfig.contact.phoneDisplay
                   )}
                 </span>
               </span>
@@ -463,45 +460,65 @@ export function TrialForm() {
           {/* Map: never loaded until asked for. On a 4G phone in Bhubaneswar an
               embedded map is normally a megabyte the visitor did not ask for. */}
           <div className={styles.mapSlot}>
-            {mapLoaded && isReal(siteConfig.location.mapsEmbedUrl) ? (
-              <div>
-                <iframe
-                  className={styles.mapFrame}
-                  src={siteConfig.location.mapsEmbedUrl}
-                  title={`Map showing ${siteConfig.business.spokenName} in ${siteConfig.business.city}`}
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                />
-                <p className={styles.mapNote}>
-                  {siteConfig.business.area}, {siteConfig.business.city}
-                </p>
-              </div>
-            ) : mapLoaded ? (
-              <div>
-                <ImagePlaceholder
-                  label="Map to the gym"
-                  ratio="16/10"
-                  hideTag
-                  note="Paste the Google Maps embed URL into siteConfig.location.mapsEmbedUrl and the real map loads here instead — still only after a tap."
-                />
-              </div>
-            ) : (
-              <button
-                type="button"
+            {isReal(siteConfig.location.mapsEmbedUrl) ? (
+              /* An embed URL is configured, but it is still only loaded on a tap:
+                 a third-party iframe costs the visitor data before they have
+                 decided whether they are coming. */
+              mapLoaded ? (
+                <div>
+                  <iframe
+                    className={styles.mapFrame}
+                    src={siteConfig.location.mapsEmbedUrl}
+                    title={`Map showing ${siteConfig.business.spokenName} in ${siteConfig.business.city}`}
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                  />
+                  <p className={styles.mapNote}>
+                    {siteConfig.business.area}, {siteConfig.business.city}
+                  </p>
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  className={styles.mapButton}
+                  onClick={() => {
+                    setMapLoaded(true);
+                    trackEvent('map_load', { where: 'trial-form' });
+                  }}
+                >
+                  <span className={styles.mapButtonIcon} aria-hidden="true">
+                    <Icon name="pin" size={18} />
+                  </span>
+                  <span className="micro">Load map</span>
+                  <span style={{ maxWidth: '34ch', color: 'var(--text-faint)' }}>
+                    We only load the map if you ask for it — it saves your data until then.
+                  </span>
+                </button>
+              )
+            ) : isReal(siteConfig.location.mapsDirectionsUrl) ? (
+              /* No embed URL: hand the visitor the club's own Google listing
+                 instead of framing a map we cannot point at a pin. */
+              <a
                 className={styles.mapButton}
-                onClick={() => {
-                  setMapLoaded(true);
-                  trackEvent('map_load', { where: 'trial-form' });
-                }}
+                href={siteConfig.location.mapsDirectionsUrl}
+                target="_blank"
+                rel="noreferrer"
+                onClick={() => trackEvent('cta_click', { source: 'trial-form', kind: 'maps' })}
               >
                 <span className={styles.mapButtonIcon} aria-hidden="true">
                   <Icon name="pin" size={18} />
                 </span>
-                <span className="micro">Load map</span>
+                <span className="micro">Open in Google Maps</span>
                 <span style={{ maxWidth: '34ch', color: 'var(--text-faint)' }}>
-                  We only load the map if you ask for it — it saves your data until then.
+                  {siteConfig.location.streetLine}, {siteConfig.location.area},{' '}
+                  {siteConfig.location.city} {siteConfig.location.pin}
                 </span>
-              </button>
+              </a>
+            ) : (
+              <p className={styles.mapNote}>
+                {siteConfig.location.landmark}, {siteConfig.location.area},{' '}
+                {siteConfig.location.city}
+              </p>
             )}
           </div>
         </aside>

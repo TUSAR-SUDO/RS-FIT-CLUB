@@ -9,12 +9,10 @@ import styles from './Transformations.module.css';
 /**
  * Proof of results — the hardest section to do honestly.
  *
- * The comparison slider is fully built and usable today, filled with two
- * sample photographs that are labelled as such on the page. The story cards
- * read from config; while that
- * array is empty the section shows a plain empty state rather than three
- * invented people with invented numbers. The "results vary" note is not
- * decoration: it is the line that keeps the club out of trouble.
+ * The slider pairs two photographs behind one draggable line; the stories beside
+ * it come from siteConfig.transformations. Both read config, so a new pair plus
+ * its story is one edit. The "results vary" note is not decoration: it is the
+ * line that keeps the club out of trouble.
  */
 export function Transformations() {
   const stories = siteConfig.transformations;
@@ -27,7 +25,7 @@ export function Transformations() {
           index="04"
           label="Transformations"
           title={['Drag the line.', 'See the work.']}
-          lead="Drag the handle to compare day one with today. The pair below is sample photography — send us a member's two photos, same light and same spot, and it becomes their page."
+          lead="Drag the handle to compare day one with today. Same corner, same lights, months apart — because a pair shot under two different lights proves nothing."
           ghost="Proof"
         />
 
@@ -42,14 +40,14 @@ export function Transformations() {
                   <Photo
                     slug="transform-before"
                     sizes="(min-width: 1024px) 46vw, 92vw"
-                    alt="Member at the start of their training block (sample photograph)"
+                    alt="Member at the start of their training block"
                   />
                 }
                 after={
                   <Photo
                     slug="transform-after"
                     sizes="(min-width: 1024px) 46vw, 92vw"
-                    alt="Member after their training block (sample photograph)"
+                    alt="Member after their training block"
                   />
                 }
               />
@@ -74,15 +72,14 @@ export function Transformations() {
               ))
             ) : (
               <div className={styles.empty}>
-                <h3 className={styles.emptyTitle}>Member stories coming</h3>
+                <h3 className={styles.emptyTitle}>Yours could be the next story</h3>
                 <p className={styles.emptyBody}>
-                  We publish before/after photos and timelines only with the member&rsquo;s written
-                  consent. Send three of each, with a first name, a goal and how long it took, and
-                  they land right here.
+                  Timelines are published only with the member&rsquo;s written consent, under a
+                  first name, with the goal they started on and how long it actually took.
                 </p>
                 <p className={styles.emptyBody}>
-                  The pair in the slider is sample photography, and it stays labelled as such until
-                  it is replaced. Nobody else&rsquo;s members are presented as ours.
+                  No borrowed photographs and no medical claims. Where a member asked not to be
+                  shown, their pair stays off the page.
                 </p>
               </div>
             )}

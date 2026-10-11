@@ -1,0 +1,669 @@
+/* ============================================================================
+   INTERIOR PAGES — shared styles for every full page beyond Home.
+   Uses the same tokens, chamfers and surfaces as the rest of the site.
+   ========================================================================== */
+
+/* ---------------------------------------------------------------- page wrap */
+.page {
+  position: relative;
+  overflow: clip;
+}
+
+.pageHeader {
+  position: relative;
+  padding-top: calc(var(--header-h) + clamp(2.5rem, 8vh, 5rem));
+  padding-bottom: clamp(3rem, 6vh, 5rem);
+  overflow: clip;
+}
+
+.gridLines {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: repeating-linear-gradient(90deg, var(--line) 0 1px, transparent 1px 25%);
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.8), transparent 60%);
+  -webkit-mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.8), transparent 60%);
+}
+
+.headerInner {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: var(--sp-3);
+  max-width: 64rem;
+}
+
+/* ------------------------------------------------------------ breadcrumb */
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+.breadcrumb a:hover {
+  color: var(--accent);
+}
+.crumbSep {
+  color: var(--line-strong);
+}
+.crumbCurrent {
+  color: var(--accent);
+}
+
+/* --------------------------------------------------------------- hero head */
+.heroHead {
+  position: relative;
+}
+
+.ghost {
+  position: absolute;
+  left: -0.06em;
+  top: -0.42em;
+  z-index: -1;
+  font-size: var(--fs-ghost);
+  white-space: nowrap;
+}
+
+.heroTitle {
+  margin: 0;
+  max-width: 22ch;
+}
+
+.heroLead {
+  margin: 0;
+  max-width: 56ch;
+}
+
+/* ------------------------------------------------------------ section body */
+.body {
+  padding-bottom: var(--section-y);
+}
+
+.bodySection {
+  padding-top: var(--section-y);
+}
+
+/* ------------------------------------------------------------- 2-col grid */
+.splitGrid {
+  display: grid;
+  gap: clamp(2rem, 4vw, 3.5rem);
+}
+@media (min-width: 768px) {
+  .splitGrid {
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+  }
+}
+
+/* ------------------------------------------------------------ 3-col grid */
+.triGrid {
+  display: grid;
+  gap: clamp(1rem, 2vw, 1.5rem);
+}
+@media (min-width: 640px) {
+  .triGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (min-width: 1024px) {
+  .triGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* ------------------------------------------------------------ 4-col grid */
+.quadGrid {
+  display: grid;
+  gap: clamp(1rem, 2vw, 1.5rem);
+}
+@media (min-width: 640px) {
+  .quadGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (min-width: 1024px) {
+  .quadGrid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* ------------------------------------------------------------------- card */
+.card {
+  position: relative;
+  /* Cards are deep-link targets (/programs#weight-training and friends), so a
+     native anchor jump has to clear the fixed header. */
+  scroll-margin-top: calc(var(--header-h) + 1rem);
+  display: grid;
+  gap: 0.8rem;
+  padding: clamp(1.25rem, 3vw, 2rem);
+  background: var(--bg-1);
+  border: 1px solid var(--line);
+  clip-path: polygon(
+    var(--chamfer-sm) 0,
+    100% 0,
+    100% calc(100% - var(--chamfer-sm)),
+    calc(100% - var(--chamfer-sm)) 100%,
+    0 100%,
+    0 var(--chamfer-sm)
+  );
+  transition: border-color var(--dur-2) var(--ease-out);
+}
+.card:hover {
+  border-color: var(--line-strong);
+}
+
+.cardFeatured {
+  border-color: var(--accent);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--accent) 5%, var(--bg-1)),
+    var(--bg-1) 50%
+  );
+}
+
+.cardIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  clip-path: polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px);
+}
+
+.cardTitle {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(1rem, 1.6vw, 1.15rem);
+  line-height: 1.15;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+}
+
+.cardBody {
+  margin: 0;
+  font-size: var(--fs-small);
+  line-height: 1.6;
+  color: var(--text-dim);
+}
+
+.cardMeta {
+  font-size: var(--fs-micro);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+.cardNumeral {
+  font-family: var(--font-num);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+/* ---------------------------------------------------------- detail list */
+.detailList {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.detailItem {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  font-size: var(--fs-small);
+  line-height: 1.6;
+  color: var(--text-dim);
+}
+
+.detailItem svg {
+  flex-shrink: 0;
+  color: var(--accent);
+  margin-top: 0.2rem;
+}
+
+/* --------------------------------------------------------- info row */
+.infoRow {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.8rem 1rem;
+  background: var(--bg-1);
+  border: 1px solid var(--line);
+  font-size: var(--fs-small);
+  line-height: 1.5;
+  color: var(--text-dim);
+}
+.infoRow svg {
+  flex-shrink: 0;
+  color: var(--accent);
+}
+
+/* --------------------------------------------------------- tag badge */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.55rem;
+  background: var(--accent-soft);
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  font-size: 0.5625rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* ------------------------------------------------- focus coding
+   The same five codes the home timetable uses, so a class reads the same
+   colour on both pages. Built from the single accent plus neutral weight —
+   the palette never grows a second hue. */
+.focusStrength {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-ink);
+}
+.focusCardio {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: transparent;
+  color: var(--text);
+}
+.focusDance {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.focusCoach {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.focusOpen {
+  border-color: var(--line-strong);
+  color: var(--text-faint);
+}
+
+/* --------------------------------------------------------- chip */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.2rem 0.5rem;
+  font-size: var(--fs-micro);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border: 1px solid var(--line);
+  color: var(--text-dim);
+}
+
+/* --------------------------------------------------------- photo frame */
+.photoFrame {
+  position: relative;
+  overflow: hidden;
+  background: var(--bg-2);
+  clip-path: polygon(
+    var(--chamfer) 0,
+    100% 0,
+    100% calc(100% - var(--chamfer)),
+    calc(100% - var(--chamfer)) 100%,
+    0 100%,
+    0 var(--chamfer)
+  );
+}
+
+.photoCaption {
+  margin: var(--sp-1) 0 0;
+  font-size: var(--fs-micro);
+  color: var(--text-faint);
+  line-height: 1.5;
+}
+
+/* --------------------------------------------------------- CTA strip */
+.ctaStrip {
+  display: grid;
+  gap: 1rem;
+  padding: clamp(2rem, 5vw, 3.5rem);
+  background: var(--bg-1);
+  border: 1px solid var(--line);
+  text-align: center;
+  align-items: center;
+  justify-items: center;
+  clip-path: polygon(
+    var(--chamfer-lg) 0,
+    100% 0,
+    100% calc(100% - var(--chamfer-lg)),
+    calc(100% - var(--chamfer-lg)) 100%,
+    0 100%,
+    0 var(--chamfer-lg)
+  );
+}
+
+.ctaTitle {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(1.3rem, 3vw, 2rem);
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: -0.015em;
+}
+
+.ctaBody {
+  margin: 0;
+  max-width: 44ch;
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--text-dim);
+}
+
+.ctaActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  justify-content: center;
+}
+
+/* ----------------------------------------------- trainer photo card */
+.trainerCard {
+  position: relative;
+  display: grid;
+  gap: 0;
+  overflow: hidden;
+  background: var(--bg-1);
+  border: 1px solid var(--line);
+  clip-path: polygon(
+    var(--chamfer) 0,
+    100% 0,
+    100% calc(100% - var(--chamfer)),
+    calc(100% - var(--chamfer)) 100%,
+    0 100%,
+    0 var(--chamfer)
+  );
+}
+
+.trainerPhoto {
+  aspect-ratio: 4/5;
+  overflow: hidden;
+  background: var(--bg-2);
+}
+
+.trainerPhoto img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.trainerInfo {
+  display: grid;
+  gap: 0.4rem;
+  padding: clamp(1rem, 2vw, 1.5rem);
+}
+
+.trainerName {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(0.95rem, 1.4vw, 1.1rem);
+  line-height: 1.15;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+}
+
+.trainerSpec {
+  margin: 0;
+  font-size: var(--fs-small);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.trainerCreds {
+  margin: 0;
+  font-size: var(--fs-micro);
+  color: var(--text-faint);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* ---------------------------------------------- timetable full grid */
+.schedGrid {
+  display: grid;
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+}
+@media (min-width: 768px) {
+  .schedGrid {
+    grid-template-columns: repeat(7, 1fr);
+  }
+}
+
+.schedDay {
+  background: var(--bg-0);
+}
+
+.schedDayHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.6rem 0.8rem;
+  background: var(--bg-2);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.schedSlot {
+  display: grid;
+  gap: 0.2rem;
+  padding: 0.55rem 0.8rem;
+  border-top: 1px solid var(--line);
+}
+
+.schedTime {
+  font-family: var(--font-num);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.schedName {
+  font-size: var(--fs-small);
+  font-weight: 600;
+}
+
+/* ------------------------------------------------ gallery masonry */
+.galleryGrid {
+  columns: 1;
+  column-gap: clamp(0.75rem, 1.5vw, 1.25rem);
+}
+@media (min-width: 640px) {
+  .galleryGrid {
+    columns: 2;
+  }
+}
+@media (min-width: 1024px) {
+  .galleryGrid {
+    columns: 3;
+  }
+}
+
+.galleryItem {
+  break-inside: avoid;
+  margin-bottom: clamp(0.75rem, 1.5vw, 1.25rem);
+  position: relative;
+  overflow: hidden;
+  background: var(--bg-2);
+  clip-path: polygon(
+    var(--chamfer-sm) 0,
+    100% 0,
+    100% calc(100% - var(--chamfer-sm)),
+    calc(100% - var(--chamfer-sm)) 100%,
+    0 100%,
+    0 var(--chamfer-sm)
+  );
+}
+
+/* Masonry needs a fixed ratio per frame: a figure whose height came from the
+   image would break `columns` balancing as each photo decoded. */
+.frameWide {
+  aspect-ratio: 16/10;
+}
+.frameTall {
+  aspect-ratio: 4/5;
+}
+
+.galleryItem img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.galleryLabel {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 0.6rem 0.8rem;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+  font-size: var(--fs-micro);
+  color: var(--text-dim);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* --------------------------------------------------- contact grid */
+.contactGrid {
+  display: grid;
+  gap: clamp(2rem, 4vw, 3.5rem);
+}
+@media (min-width: 768px) {
+  .contactGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.contactBlock {
+  display: grid;
+  gap: 1rem;
+  align-content: start;
+}
+
+.contactLabel {
+  font-size: var(--fs-micro);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+.contactValue {
+  margin: 0;
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--text);
+}
+
+.contactLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--accent);
+  font-weight: 600;
+  transition: opacity var(--dur-1);
+}
+.contactLink:hover {
+  opacity: 0.8;
+}
+
+/* ----------------------------------------------------- map embed */
+.mapFrame {
+  position: relative;
+  aspect-ratio: 16/9;
+  overflow: hidden;
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  clip-path: polygon(
+    var(--chamfer) 0,
+    100% 0,
+    100% calc(100% - var(--chamfer)),
+    calc(100% - var(--chamfer)) 100%,
+    0 100%,
+    0 var(--chamfer)
+  );
+}
+
+.mapPlaceholder {
+  display: grid;
+  place-items: center;
+  height: 100%;
+  color: var(--text-faint);
+  font-size: var(--fs-small);
+  text-align: center;
+  padding: 2rem;
+  gap: 0.5rem;
+}
+
+/* ------------------------------------------------------- hours table */
+.hoursTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.hoursRow {
+  border-bottom: 1px solid var(--line);
+}
+
+.hoursDay {
+  padding: 0.65rem 0;
+  font-weight: 600;
+  font-size: var(--fs-small);
+  text-align: left;
+}
+
+.hoursTime {
+  padding: 0.65rem 0;
+  font-size: var(--fs-small);
+  color: var(--text-dim);
+  text-align: right;
+}
+
+/* --------------------------------------------------------- footnote */
+.footnote {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  margin: 0;
+  padding-top: var(--sp-3);
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  color: var(--text-faint);
+  max-width: 62ch;
+}
+.footnote svg {
+  flex-shrink: 0;
+  margin-top: 0.15rem;
+}
+
+/* ------------------------------------------------ section separator */
+.separator {
+  height: 1px;
+  background: var(--line);
+  border: 0;
+  margin: 0;
+}

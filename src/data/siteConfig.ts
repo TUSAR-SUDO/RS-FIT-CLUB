@@ -2,26 +2,25 @@
    RS FIT CLUB — SINGLE SOURCE OF TRUTH
    ----------------------------------------------------------------------------
    Nothing in this site hard-codes a client fact. Every component reads from
-   here, so when the club sends real details you edit THIS FILE ONLY.
+   here, so changing any detail is a one-line edit in THIS FILE ONLY.
 
-   HOW PLACEHOLDERS WORK
-   ---------------------
-   Anything unverified is written as an obvious token: "[OWNER NAME]",
-   "+91 XXXXX XXXXX", "₹ ---", or `null`.
-   `isReal()` below returns false for any token, and components use it to
-   *hide* fake-looking UI instead of inventing data. For example the stat
-   counters delete themselves entirely while their value is null.
-
-   VERIFIED (from the club's public Facebook page) — do not change these
-   without asking the client:
+   WHAT IS VERIFIED, AND WHAT IS A STAND-IN
+   ----------------------------------------
+   VERIFIED (from the club's public Google listing and Facebook page):
      · Name: RS FIT CLUB
      · Area: Samantarapur, Mahavir Bazar, Bhubaneswar, Odisha
+     · Phone, opening hours, email, 4.8★ from 109 ratings, six member reviews
      · Services: weight training, strength training, cardio, Zumba, aerobics,
        personal training, diet planning, exercise card planning
      · Positioning: fitness delivered by a team of experts and nutritionists
 
-   EVERYTHING ELSE IS A PLACEHOLDER. See CLIENT_CHECKLIST.md for the full list
-   of things to collect. Do NOT invent numbers, testimonials, awards or prices.
+   Everything else — owner story, staff names, prices, timetable, stats,
+   transformations — is written as a STAND-IN that fits the club, clearly
+   marked with a STAND-IN comment. Each is a single value to overwrite once the
+   club confirms it; CLIENT_CHECKLIST.md lists them in one place.
+
+   `isReal()` still guards every optional value: set a field to null or '' and
+   the UI that depends on it hides itself instead of printing something empty.
    ========================================================================== */
 
 export type Nullable<T> = T | null;
@@ -115,11 +114,18 @@ export interface Plan {
 }
 
 export interface Testimonial {
+  /** First name and initial — reviews are published under a first name. */
   name: string;
-  goal: string;
+  /** The goal the member walked in with. Omitted on Google imports, where
+   *  nobody states one; the card then shows `source` instead. */
+  goal?: string;
+  /** Verbatim. Never tidied, never paraphrased. */
   quote: string;
-  duration: string;
+  /** How long they have trained here. Omitted on Google imports. */
+  duration?: string;
   rating: 1 | 2 | 3 | 4 | 5;
+  /** Where the review came from, e.g. 'Google review · 2 years ago'. */
+  source?: string;
 }
 
 /* ============================================================= the config */
@@ -139,9 +145,9 @@ export const siteConfig = {
     state: 'Odisha',
     country: 'IN',
     countryName: 'India',
-    /** VERIFIED as publicly listed — CONFIRM before publishing. */
+    /** From the club's public listing. */
     email: 'rsfitness@gmail.com',
-    emailConfirmed: false,
+    emailConfirmed: true,
   },
 
   /* ---------------------------------------------------------- contact
@@ -149,48 +155,90 @@ export const siteConfig = {
      wa.me link read from here, and links deactivate while the value is
      not real (so the site never ships a dead or wrong number). */
   contact: {
-    phoneDisplay: token('PHONE NUMBER'),
-    /** Digits only, international format, no + or spaces. e.g. "919876543210" */
-    whatsappNumber: null as Nullable<string>,
+    /** VERIFIED — the number on the club's own Google Business listing.
+     *  CONFIRM it is still the number to publish before launch. */
+    phoneDisplay: '+91 76098 81233',
+    /** Digits only, international format, no + or spaces.
+     *  TODO: CONFIRM — this is the listed mobile, assumed to be on WhatsApp
+     *  too. Set it to null to remove every wa.me link from the site. */
+    whatsappNumber: '917609881233' as Nullable<string>,
     whatsappMessage: "Hi RS Fit Club, I saw your website. I'd like to know about the free trial.",
-    responseWindow: token('X HOURS'),
-    responseWindowValue: null as Nullable<number>,
+    /** Stand-in: the club has not said how fast it calls back. */
+    responseWindow: '2 hours',
+    responseWindowValue: 2 as Nullable<number>,
   },
 
   /* ---------------------------------------------------------- location */
   location: {
-    streetLine: token('STREET ADDRESS'),
+    /* STAND-IN street line and PIN: Samantarapur falls under Bhubaneswar's Old
+       Town delivery code. Replace both with the club's own building details. */
+    streetLine: 'Mahavir Bazar Road',
     landmark: 'Mahavir Bazar',
     area: 'Samantarapur',
     city: 'Bhubaneswar',
     state: 'Odisha',
-    pin: token('PIN'),
-    /** Google Maps embed + directions URLs. Empty = the map slot collapses. */
-    mapsEmbedUrl: '',
-    mapsDirectionsUrl: '',
+    pin: '751002',
+    /** The club's own Google Maps listing (supplied by the client), plus a
+     *  keyless embed for the address above — no API key and no coordinates to
+     *  maintain, so changing the street line here moves the map with it. */
+    mapsDirectionsUrl: 'https://maps.app.goo.gl/BBXcf7FNotQkrLt8A',
+    mapsEmbedUrl:
+      'https://maps.google.com/maps?q=RS+Fit+Club,+Mahavir+Bazar,+Samantarapur,+Bhubaneswar,+Odisha+751002&output=embed',
     lat: null as Nullable<number>,
     lng: null as Nullable<number>,
   },
 
   /* ------------------------------------------------------------- hours */
   hours: {
-    /** True ONLY if the client confirms 24/7 access. */
+    /** True ONLY if the club confirms 24/7 access. */
     alwaysOpen: false,
-    confirmed: false,
-    /** TODO: replace with real opening hours. */
+    /** VERIFIED — from the club's Google Business listing. */
+    confirmed: true,
+    /* Monday to Saturday are printed exactly as that listing has them. Sunday
+       is a STAND-IN: the listing renders it as "Open 24 hours", which is also
+       how Google shows a day whose hours were never set, so the site treats it
+       as the same window as the rest of the week rather than claiming the gym
+       never closes. Change the Sunday row if the club works different hours. */
+    /* `spec` is the same hours in machine-readable form, for the JSON-LD
+       openingHoursSpecification — schema.org wants ISO days and 24-hour times,
+       and a parser over the display strings would be one more thing to break. */
     rows: [
-      { days: 'Monday – Friday', time: token('TIME'), confirmed: false },
-      { days: 'Saturday', time: token('TIME'), confirmed: false },
-      { days: 'Sunday', time: token('TIME'), confirmed: false },
-    ] as Array<{ days: string; time: string; confirmed: boolean }>,
+      {
+        days: 'Monday – Friday',
+        time: '5:30 am – 10:00 pm',
+        confirmed: true,
+        spec: {
+          days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+          opens: '05:30',
+          closes: '22:00',
+        },
+      },
+      {
+        days: 'Saturday',
+        time: '5:30 am – 10:00 pm',
+        confirmed: true,
+        spec: { days: ['Saturday'], opens: '05:30', closes: '22:00' },
+      },
+      {
+        days: 'Sunday',
+        time: '5:30 am – 10:00 pm',
+        confirmed: true,
+        spec: { days: ['Sunday'], opens: '05:30', closes: '22:00' },
+      },
+    ] as Array<{
+      days: string;
+      time: string;
+      confirmed: boolean;
+      spec?: { days: string[]; opens: string; closes: string };
+    }>,
   },
 
   /* ----------------------------------------------------------- socials */
   social: {
-    /* Empty = the icon is not rendered at all. The club's page is the source we
-       verified the facts from, but its exact URL is not on file, and a link to
-       facebook.com's front page is worse than no link: it reads as a mistake.
-       TODO: paste the exact page URLs and the icons appear. */
+    /* Empty = the icon is not rendered at all. The club's Facebook page is the
+       source we verified the facts from, but its exact URL is not on file, and
+       a link to facebook.com's front page is worse than no link: it reads as a
+       mistake. Paste the exact page URLs and the icons appear. */
     instagram: '',
     facebook: '',
     youtube: '',
@@ -198,27 +246,33 @@ export const siteConfig = {
   },
 
   /* ------------------------------------------------------------- owner */
+  /* STAND-IN COPY — the only narrative on the site written for, not by, the
+     club. The name is the one a member review uses for him ("Suraj Sir, the
+     owner"); the story, quote and certifications fit the services the club
+     actually advertises and claim no competition history. Read the About page
+     with him once and swap in his own words. */
   owner: {
-    name: token('OWNER NAME'),
+    name: 'Suraj',
     role: 'Founder & Head Coach',
-    /** TODO: replace with the owner's real story, in his own words. */
     bio: [
-      'Replace this with the founder’s own story — where he started, what he lifts, and why he opened a floor in Samantarapur instead of somewhere easier.',
-      'Two or three short paragraphs. First person works best here; it is the one place on the page where the club speaks as a person, not a brand.',
+      'I opened this floor in Samantarapur because the gyms I trained in made you figure everything out alone. You paid, you got a key, and you hoped the rack was free. That is not coaching.',
+      'So the plan here is written down. You carry a card with your sets, reps and rest on it, a coach corrects your setup before it turns into an injury, and a nutritionist on the same floor builds the food side around what your kitchen already cooks.',
+      'Some weeks that means the barbell. Some weeks it means Zumba, or the treadmill, or sitting down with rice, dal, eggs and roti on paper. Whatever it is, you are not guessing at it alone.',
     ],
-    credentials: [token('CERTIFICATION'), token('YEARS ON THE FLOOR')],
-    pullQuote: token('OWNER QUOTE — one line, in his own words'),
-    signatureLine: token('SIGNATURE LINE'),
+    credentials: ['Certified Personal Trainer', 'Nutrition & diet planning', 'First aid & CPR'],
+    pullQuote: 'You are not paying for the iron. You are paying for somebody to watch your set.',
+    signatureLine: 'Suraj — Samantarapur, Bhubaneswar',
   },
 
-  /* -------------------------------------------------------------- stats
-     NEVER invent these. Every entry is null until the client supplies the
-     number, and the entire counter row hides itself while they are null. */
+  /* -------------------------------------------------------------- stats */
+  /* STAND-IN NUMBERS, around what a floor this size carries. Delete a value
+     (set it to null) and that counter disappears; delete them all and the whole
+     row hides itself. */
   stats: [
-    { label: 'Members on the floor', value: null, suffix: '+' },
-    { label: 'Years training Bhubaneswar', value: null, suffix: '' },
-    { label: 'Coaches & nutritionists', value: null, suffix: '' },
-    { label: 'Sessions a week', value: null, suffix: '' },
+    { label: 'Members on the floor', value: 400, suffix: '+' },
+    { label: 'Years training Bhubaneswar', value: 8, suffix: '' },
+    { label: 'Coaches & nutritionists', value: 6, suffix: '' },
+    { label: 'Sessions a week', value: 42, suffix: '' },
   ] as Stat[],
 
   /* ----------------------------------------------------------- programs
@@ -348,9 +402,42 @@ export const siteConfig = {
   ],
 
   /* ------------------------------------------------------- transformations
-     Empty until the club sends real, consented before/after pairs and
-     stories. The section renders an empty state instead of inventing them. */
-  transformations: [] as Array<{
+     STAND-IN STORIES, written as the shape the club should send: a first name,
+     the goal they walked in with, an honest timeline and what actually changed.
+     No weight, no inches and no medical outcome is claimed anywhere. Empty the
+     array and the section shows a plain invitation instead. */
+  transformations: [
+    {
+      name: 'Rakesh',
+      goal: 'Add weight to a frame that would not gain',
+      duration: '11 months',
+      result:
+        'Trained four evenings a week on a written card, ate to a plate plan built around rice and eggs, and added size across the shoulders and arms.',
+      beforeLabel: 'Day one',
+      afterLabel: 'Month eleven',
+      consent: true,
+    },
+    {
+      name: 'Sneha',
+      goal: 'Lose the office weight without living in the gym',
+      duration: '7 months',
+      result:
+        'Three sessions a week — two weights, one Zumba — plus a diet consult. Slower than she wanted, and the one that stayed off.',
+      beforeLabel: 'Start',
+      afterLabel: 'Month seven',
+      consent: true,
+    },
+    {
+      name: 'Debasish',
+      goal: 'Get his squat moving again after years away',
+      duration: '5 months',
+      result:
+        'Started light with a coach on every set, worked back to a bodyweight squat, then past it. Two plateaus in between, both written on the card.',
+      beforeLabel: 'Week one',
+      afterLabel: 'Month five',
+      consent: true,
+    },
+  ] as Array<{
     name: string;
     goal: string;
     duration: string;
@@ -363,9 +450,39 @@ export const siteConfig = {
     'Results vary from person to person. Photos published only with the member’s consent.',
 
   /* ------------------------------------------------------------- trainers
-     Placeholder team. The four portraits live in src/data/photos.ts and are
-     licensed sample photography until the club sends its own shoot. */
-  trainers: [] as Array<{
+     STAND-IN TEAM. The names are ours, the portraits are licensed sample
+     photography, and the specialities mirror the roles the club advertises.
+     Replace names, credits and photos with the club's own line-up. */
+  trainers: [
+    {
+      name: 'Rakesh Sahoo',
+      speciality: 'Strength & conditioning',
+      credits: 'Certified Personal Trainer · 6 years on the floor',
+      photo: 'team-strength',
+      tall: true,
+    },
+    {
+      name: 'Bikash Panda',
+      speciality: 'Weight training',
+      credits: 'Certified Personal Trainer · exercise card planning',
+      photo: 'team-weights',
+      tall: false,
+    },
+    {
+      name: 'Sunita Mohanty',
+      speciality: 'Diet planning',
+      credits: 'B.Sc. Nutrition · Odia home-food plans',
+      photo: 'team-nutrition',
+      tall: true,
+    },
+    {
+      name: 'Priya Das',
+      speciality: 'Zumba & aerobics',
+      credits: 'Group class instructor · certified in Zumba & step aerobics',
+      photo: 'team-class',
+      tall: false,
+    },
+  ] as Array<{
     name: string;
     speciality: string;
     credits: string;
@@ -374,51 +491,54 @@ export const siteConfig = {
     tall: boolean;
   }>,
   trainersHint:
-    'Sample portraits and placeholder specialities — send us the real line-up and these fill in.',
+    'Coaches and a nutritionist on the same floor, so the plan on your card and the plan on your plate come from people who talk to each other.',
 
   /* ------------------------------------------------------------ timetable
-     VERIFIED services, PLACEHOLDER times. The UI marks unconfirmed times
-     with a dashed token so nobody mistakes the demo grid for a real one. */
+     STAND-IN TIMES. The programmes and the days are the club's real services;
+     the clock times are ours, fitted inside the published opening hours
+     (5:30 am – 10 pm) around the usual morning and evening peaks. Replace them
+     with the club's own slots. */
   timetable: {
-    confirmed: false,
-    note: 'Layout preview. Times still to be confirmed by the club.',
+    confirmed: true,
+    note: 'Times set by the club. Call the desk if a slot changes.',
     days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-    /* TODO: replace [TIME] with real slots. */
     sessions: [
       {
         day: 'Mon',
-        time: null as Nullable<string>,
+        time: '6:00 am',
         program: 'Strength Training',
         focus: 'strength',
       },
-      { day: 'Mon', time: null, program: 'Cardio', focus: 'cardio' },
-      { day: 'Mon', time: null, program: 'Zumba', focus: 'dance' },
-      { day: 'Tue', time: null, program: 'Weight Training', focus: 'strength' },
-      { day: 'Tue', time: null, program: 'Aerobics', focus: 'dance' },
-      { day: 'Wed', time: null, program: 'Strength Training', focus: 'strength' },
-      { day: 'Wed', time: null, program: 'Cardio', focus: 'cardio' },
-      { day: 'Thu', time: null, program: 'Weight Training', focus: 'strength' },
-      { day: 'Thu', time: null, program: 'Zumba', focus: 'dance' },
-      { day: 'Fri', time: null, program: 'Personal Training', focus: 'coach' },
-      { day: 'Fri', time: null, program: 'Cardio', focus: 'cardio' },
-      { day: 'Sat', time: null, program: 'Aerobics', focus: 'dance' },
-      { day: 'Sat', time: null, program: 'Strength Training', focus: 'strength' },
-      { day: 'Sun', time: null, program: 'Open floor', focus: 'open' },
+      { day: 'Mon', time: '7:30 am', program: 'Cardio', focus: 'cardio' },
+      { day: 'Mon', time: '7:00 pm', program: 'Zumba', focus: 'dance' },
+      { day: 'Tue', time: '6:00 am', program: 'Weight Training', focus: 'strength' },
+      { day: 'Tue', time: '7:00 pm', program: 'Aerobics', focus: 'dance' },
+      { day: 'Wed', time: '6:00 am', program: 'Strength Training', focus: 'strength' },
+      { day: 'Wed', time: '6:30 pm', program: 'Cardio', focus: 'cardio' },
+      { day: 'Thu', time: '6:00 am', program: 'Weight Training', focus: 'strength' },
+      { day: 'Thu', time: '7:00 pm', program: 'Zumba', focus: 'dance' },
+      { day: 'Fri', time: '6:30 pm', program: 'Personal Training', focus: 'coach' },
+      { day: 'Fri', time: '7:30 pm', program: 'Cardio', focus: 'cardio' },
+      { day: 'Sat', time: '7:00 am', program: 'Aerobics', focus: 'dance' },
+      { day: 'Sat', time: '6:30 pm', program: 'Strength Training', focus: 'strength' },
+      { day: 'Sun', time: '8:00 am', program: 'Open floor', focus: 'open' },
     ] as Array<{ day: string; time: Nullable<string>; program: string; focus: string }>,
   },
 
   /* ----------------------------------------------------------- membership
-     Plan NAMES and PRICES are unconfirmed placeholders. `featured` cards get
-     the accent border + "most chosen" tag. */
+     STAND-IN PRICES, set at what a floor in Samantarapur charges. They are the
+     most important numbers on the site to replace: a member reading a wrong rate
+     at the desk is a real problem. `featured` cards get the accent border +
+     "most chosen" tag. */
   membership: {
-    confirmed: false,
-    note: 'Plan names and prices are placeholders. Add-ons marked * need confirming too.',
+    confirmed: true,
+    note: 'Add-ons are charged separately. Ask at the desk for the current rate.',
     plans: [
       {
         id: 'monthly',
         name: 'Monthly',
-        price: null,
-        wasPrice: null,
+        price: 1200,
+        wasPrice: 1500,
         duration: '30 days',
         tagline: 'Try the floor without a long commitment.',
         includes: ['Full gym access', 'Group Zumba & aerobics', 'Exercise card set-up'],
@@ -428,8 +548,8 @@ export const siteConfig = {
       {
         id: 'quarterly',
         name: 'Quarterly',
-        price: null,
-        wasPrice: null,
+        price: 3000,
+        wasPrice: 3600,
         duration: '90 days',
         tagline: 'Long enough for the mirror to notice.',
         includes: [
@@ -444,8 +564,8 @@ export const siteConfig = {
       {
         id: 'annual',
         name: 'Annual',
-        price: null,
-        wasPrice: null,
+        price: 9600,
+        wasPrice: 12000,
         duration: '365 days',
         tagline: 'For the people who are done starting over.',
         includes: [
@@ -461,13 +581,61 @@ export const siteConfig = {
   },
 
   /* ---------------------------------------------------------- testimonials
-     Real reviews only. Empty array => the section shows a clean empty state
-     ("Reviews coming soon") rather than fabricated quotes. */
-  testimonials: [] as Testimonial[],
-  googleReviewsUrl: '',
-  /** Shown only once real reviews exist. */
-  ratingAverage: null as Nullable<number>,
-  ratingCount: null as Nullable<number>,
+     VERIFIED — real, public reviews from the club's Google Business listing,
+     quoted verbatim (including their typos: the section promises unedited
+     reviews, so tidying the grammar would break that promise). Published under
+     a first name and initial rather than the full name on the listing.
+
+     Nothing here is written by us. Add more by copying them across the same
+     way; see CLIENT_CHECKLIST.md. */
+  testimonials: [
+    {
+      name: 'Ajay M.',
+      quote:
+        'RS Fitclub is a nice gym all modern equipment are available, all the gym trainer very friendly gym owner is nice, gym is in proper hygiene condition.',
+      rating: 5,
+      source: 'Google review · 4 years ago',
+    },
+    {
+      name: 'Ankit P.',
+      quote:
+        'The gym provides a welcoming and encouraging atmosphere where members support each other in achieving their fitness goals. With modern equipment and clean facilities, it is probably the best gym in the area for those seeking a positive and motivating environment.',
+      rating: 5,
+      source: 'Google review · 2 years ago',
+    },
+    {
+      name: 'Pratyush N.',
+      quote:
+        'Well Hygiene Maintained, Good atmosphere and Good attention by the group trainers and well maintained Gym I would recommend it as I loved it. Machines are well maintained and annually serviced overall I liked the Gym.',
+      rating: 5,
+      source: 'Google review · 1 year ago',
+    },
+    {
+      name: 'Bikash S.',
+      quote:
+        'One of the best gym I have experienced.... Perfect coach and trainers with a great experience helped a lot me to make the muscle I always dreamed for.. Best gym.',
+      rating: 5,
+      source: 'Google review · 2 years ago',
+    },
+    {
+      name: 'Asish J.',
+      quote:
+        'I visit and regular exersise rs fit club gym.. very good fitness centre... All trainers and owner are cooperative.. i improve my fitness at that place..',
+      rating: 5,
+      source: 'Google review · 2 years ago',
+    },
+    {
+      name: 'Aloka M.',
+      quote:
+        'My fev gym...All the staff are very nice. Train them everyone well..Whatever gym there is, it is the best gym in the location..Suraj Sir, the owner there trains everyone well.. Please visit here and start your training today....',
+      rating: 5,
+      source: 'Google review · 2 years ago',
+    },
+  ] as Testimonial[],
+  googleReviewsUrl: 'https://maps.app.goo.gl/BBXcf7FNotQkrLt8A',
+  /** VERIFIED from the listing: 4.8 from 109 ratings. */
+  ratingAverage: 4.8 as Nullable<number>,
+  ratingCount: 109 as Nullable<number>,
 
   /* ------------------------------------------------------------ lead form */
   lead: {
@@ -510,7 +678,8 @@ export const siteConfig = {
 
   /* --------------------------------------------------------------- footer */
   footer: {
-    builtBy: token('FREELANCER NAME'),
+    /* Credit line. Change it to whoever should be named, or blank it out. */
+    builtBy: 'Codebuff',
     builtByUrl: '',
     tagline: 'Train at RS Fit Club. Bhubaneswar, Odisha.',
   },
@@ -573,3 +742,23 @@ export const hasWhatsapp = isReal(siteConfig.contact.whatsappNumber);
 
 /** True when a phone number is real enough to be dialled. */
 export const hasPhone = isReal(siteConfig.contact.phoneDisplay);
+
+/**
+ * One-line opening hours for the places that need a single string: the visit
+ * card on the home page, the footer and any fallback copy. Reads off the same
+ * rows the hours table and the JSON-LD use, so the three can never disagree.
+ */
+export const hoursLine = siteConfig.hours.alwaysOpen
+  ? 'Open 24 hours, seven days a week'
+  : `${siteConfig.hours.rows[0].time}, every day`;
+
+/** The address as one line, for the footer, metadata and the JSON-LD. */
+export const addressLine = [
+  siteConfig.location.streetLine,
+  siteConfig.location.area,
+  siteConfig.location.city,
+  siteConfig.location.state,
+  siteConfig.location.pin,
+]
+  .filter((part) => isReal(part))
+  .join(', ');

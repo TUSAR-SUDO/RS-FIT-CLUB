@@ -5,6 +5,8 @@ dist-ssr
 .env
 .env.*
 !.env.example
+# Local verification scratch (screenshots, capture logs, dev-server logs).
+.dev/
 .DS_Store
 Thumbs.db
 .vite

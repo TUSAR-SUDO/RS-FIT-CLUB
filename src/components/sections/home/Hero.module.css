@@ -120,22 +120,48 @@
 }
 
 /* ------------------------------------------------- layer 2: the founder */
-/* Sizing note: the founder's head is at the TOP of the cutout, so a taller
-   render moves his face UP into the headline. The width/bottom pair here is
-   tuned so his head lands in the gap between the sub-line and the CTA block at
-   390×844, while his shoulders and arms sit behind the CTAs for the crop to
-   bite. Change one and re-check both 390px and 430px. */
+/* Phones anchor the founder by his HEAD, not his feet. The head sits at the
+   top of the cutout, so a bottom-anchored figure ties its size to how far up
+   his face reaches: shrinking him lifts him out of the CTA block but leaves him
+   small, and growing him drives his face straight into the buttons. Anchoring
+   `top` decouples the two — the face stays in the band between the sub-line
+   and the CTA row, and the render can be as large as the screen allows, with
+   the extra height spent on chest and arms behind the buttons.
+
+   The svh cap is the second half of that: the top group does not scale with
+   viewport height, so on a short screen (375×667) a width-only rule would make
+   his face taller than the band itself. Sizing off svh keeps the whole face
+   above the CTA row on every phone height.
+
+   Desktop keeps the original bottom-anchored framing, reset in the query
+   below; change one value here and re-check 360px, 390px, 430px and 768px. */
 .figure {
   position: absolute;
   z-index: 2;
-  right: -10%;
-  bottom: -8%;
-  width: min(86vw, 430px);
+  right: -12%;
+  top: 44%;
+  /* First value is the fallback: a browser without svh support would drop the
+     clamp outright, and an unsized absolutely-positioned image renders at its
+     intrinsic width (1600px). */
+  width: min(100vw, 470px);
+  width: clamp(240px, 45svh, min(100vw, 470px));
   will-change: transform;
+}
+
+/* Short phones: the sub-line and the CTA row sit close together, so the face
+   cannot fit between them. Lifting him is the lesser evil — his hair reads as
+   near-black against a near-black hero, so the copy over it stays legible,
+   whereas a button across his eyes does not. */
+@media (max-width: 767px) and (max-height: 720px) {
+  .figure {
+    top: 41%;
+  }
 }
 
 @media (min-width: 768px) {
   .figure {
+    top: auto;
+    bottom: -8%;
     right: -4%;
     width: min(52vw, 520px);
   }
@@ -285,6 +311,17 @@
 .sub {
   max-width: 46ch;
   margin: 0;
+}
+
+/* On phones the founder's hair now passes behind the last line of this
+   paragraph. Same hairline shadow the trust row already carries, so the copy
+   stays legible over it without adding another full-width scrim. */
+@media (max-width: 1023px) {
+  .sub {
+    text-shadow:
+      0 1px 16px rgba(5, 5, 6, 0.92),
+      0 0 3px rgba(5, 5, 6, 0.95);
+  }
 }
 
 .ctaRow {

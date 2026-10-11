@@ -1,7 +1,7 @@
 /* ---------------------------------------------------------------------------
    MEMBERSHIP
-   Three plans, the middle one carried. Prices are placeholders and rendered as
-   tokens — an invented ₹ figure would be the fastest way to lose a walk-in.
+   Three plans, the middle one carried. Rates come from siteConfig.membership,
+   so what the page quotes and what the desk charges are edited in one place.
    --------------------------------------------------------------------------- */
 
 .section {
@@ -99,16 +99,6 @@
   font-size: clamp(1.6rem, 3.6vw, 2.3rem);
   line-height: 1;
   letter-spacing: -0.03em;
-}
-
-/* Muted rather than accented: the accent belongs on the CTA, and a bright pink
-   "₹---" reads as though a number had been redacted. */
-.pricePending {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: clamp(1.1rem, 1.9vw, 1.35rem);
-  line-height: 1.2;
-  letter-spacing: 0.06em;
 }
 
 .priceWas {

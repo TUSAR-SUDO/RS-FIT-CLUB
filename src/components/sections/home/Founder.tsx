@@ -6,7 +6,6 @@ import { gsap, useGSAP } from '../../../lib/gsap';
 import { Button } from '../../ui/Button';
 import { OwnerFigure } from '../../ui/OwnerFigure';
 import { SectionHead } from '../../ui/SectionHead';
-import { TodoText } from '../../ui/TodoText';
 import { Icon } from '../../ui/Icon';
 import { cx } from '../../../utils/cx';
 import styles from './Founder.module.css';
@@ -17,8 +16,10 @@ import styles from './Founder.module.css';
  * single most differentiating thing the club owns, so this section is given
  * full editorial weight rather than being squeezed into a card.
  *
- * Every fact here is a placeholder until the club supplies it — the copy tells
- * you what to write in the same place the story will live.
+ * The story, name, quote and credentials read from siteConfig.owner — the one
+ * piece of narrative written for the club rather than by it. It is a stand-in
+ * that fits the services the club advertises; CLIENT_CHECKLIST.md marks it for
+ * the owner to read and rewrite in his own words.
  */
 export function Founder() {
   const root = useRef<HTMLElement>(null);
@@ -82,12 +83,10 @@ export function Founder() {
             tight
           />
 
-          <blockquote className={styles.quote}>
-            <TodoText text={`“${owner.pullQuote}”`} />
-          </blockquote>
+          <blockquote className={styles.quote}>&ldquo;{owner.pullQuote}&rdquo;</blockquote>
 
           <p className={styles.name}>
-            <TodoText text={owner.name} />
+            {owner.name}
             <span className={cx(styles.role, 'micro')}> — {owner.role}</span>
           </p>
 
@@ -101,14 +100,12 @@ export function Founder() {
             {owner.credentials.map((credential) => (
               <span className={styles.cred} key={credential}>
                 <Icon name="check" size={13} />
-                <TodoText text={credential} />
+                {credential}
               </span>
             ))}
           </div>
 
-          <p className={styles.signature}>
-            <TodoText text={owner.signatureLine} />
-          </p>
+          <p className={styles.signature}>{owner.signatureLine}</p>
 
           <div>
             <Button
@@ -116,7 +113,7 @@ export function Founder() {
               icon="arrow-right"
               onClick={() => startLead({ source: 'founder' })}
             >
-              <TodoText text={`Train with ${owner.name}`} />
+              Train with {owner.name}
             </Button>
           </div>
         </div>

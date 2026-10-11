@@ -1,20 +1,23 @@
 /* ---------------------------------------------------------------------------
-   LEAD CAPTURE — FRONTEND STUB
+   LEAD CAPTURE
 
-   Phase 1 has no backend. `submitLead` performs real validation, then either
-   posts to VITE_LEAD_ENDPOINT (if you have one) or resolves against an
-   in-memory simulation so the whole form flow — loading, success, error,
-   double-submit guard — can be built and reviewed properly.
+   The form is live. `submitLead` validates, then POSTs JSON to an endpoint:
 
-   >>> PLUG A REAL ENDPOINT IN HERE <<<
-   Set VITE_LEAD_ENDPOINT in .env to any of:
-     · Formspree            https://formspree.io/f/xxxxxxx
-     · Google Apps Script    https://script.google.com/macros/s/xxx/exec
-     · your own Express+Mongo API   https://api.rsfitclub.in/leads
-   The payload shape below is what your endpoint receives.
+     1. VITE_LEAD_ENDPOINT, when set (Formspree, Google Apps Script, your own
+        Express API — anything that accepts JSON and answers 2xx).
+     2. Otherwise it falls back to a relay that needs no account: FormSubmit
+        forwards the POST straight to the club's inbox at
+        siteConfig.business.email. The FIRST submission triggers an activation
+        email to that address — one click and every later enquiry is delivered.
+        Until that click happens the relay answers with an error, which is why
+        the failure message tells the visitor to call instead.
+
+   With no endpoint and no email to relay to, a development build logs the
+   submission and a production build fails honestly rather than showing a
+   success panel for a lead nobody received.
    --------------------------------------------------------------------------- */
 
-import { siteConfig } from '../data/siteConfig';
+import { isReal, siteConfig } from '../data/siteConfig';
 import { trackEvent } from './analytics';
 
 export interface LeadPayload {
@@ -71,11 +74,21 @@ export function validateName(raw: string): string | null {
 
 /* -------------------------------------------------------------- submission */
 
-/** Last lead captured, kept in memory for the stub + manual verification. */
+/** Last lead captured, kept in memory for manual verification. */
 let lastLead: LeadPayload | null = null;
 export const getLastLead = (): LeadPayload | null => lastLead;
 
-const ENDPOINT: string | undefined = import.meta.env.VITE_LEAD_ENDPOINT || undefined;
+/** A configured endpoint always wins; the relay is the zero-setup fallback. */
+const CONFIGURED: string | undefined = import.meta.env.VITE_LEAD_ENDPOINT || undefined;
+
+const RELAY: string | undefined = isReal(siteConfig.business.email)
+  ? `https://formsubmit.co/ajax/${siteConfig.business.email}`
+  : undefined;
+
+const ENDPOINT: string | undefined = CONFIGURED ?? RELAY;
+
+/** True when we are posting through the relay, which needs its own field names. */
+const VIA_RELAY = !CONFIGURED && Boolean(RELAY);
 
 export async function submitLead(payload: LeadPayload): Promise<LeadResult> {
   const nameError = validateName(payload.name);
@@ -100,27 +113,57 @@ export async function submitLead(payload: LeadPayload): Promise<LeadResult> {
   lastLead = outgoing;
 
   if (!ENDPOINT) {
-    // ---- SIMULATION: no endpoint configured (Phase 1 default) -------------
-    console.info(
-      '[leads] simulated submission — connect a real endpoint in src/utils/leads.ts',
-      outgoing,
-    );
-    await sleep(750);
-    trackEvent('form_submit', { mode: 'stub', goal: outgoing.goal, time: outgoing.preferredTime });
+    /* Nowhere to send it. In development that is a logged no-op; in a production
+       build it is a failure, because a success panel for a lead nobody received
+       is the worst possible outcome for this site. */
+    if (import.meta.env.DEV) {
+      console.info('[leads] no endpoint configured — logging the submission only', outgoing);
+      await sleep(400);
+      trackEvent('form_submit', { mode: 'dev-only', goal: outgoing.goal });
+      return {
+        ok: true,
+        message: `Got it, ${outgoing.name.split(' ')[0]}. We will call you about your free trial.`,
+      };
+    }
+    trackEvent('form_error', { reason: 'no-endpoint' });
     return {
-      ok: true,
-      message: `Got it, ${outgoing.name.split(' ')[0]}. We will call you about your free trial.`,
+      ok: false,
+      message: `That did not go through. Call us on ${siteConfig.contact.phoneDisplay} and we will sort it out.`,
     };
   }
+
+  const body = VIA_RELAY
+    ? {
+        ...outgoing,
+        /* Relay-only fields. `_subject` is the subject line of the email the
+           club receives; `_template: 'table'` keeps it readable on a phone. */
+        _subject: `Free trial — ${outgoing.name} (${outgoing.phone})`,
+        _template: 'table',
+        _captcha: 'false',
+      }
+    : outgoing;
 
   try {
     const response = await fetch(ENDPOINT, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-      body: JSON.stringify(outgoing),
+      body: JSON.stringify(body),
     });
 
     if (!response.ok) throw new Error(`Endpoint responded ${response.status}`);
+
+    /* The relay answers 200 with { success: "false", message } when it refuses
+       (most often because the inbox has not clicked its activation email yet),
+       so a 2xx alone is not proof of delivery. */
+    if (VIA_RELAY) {
+      const result = (await response.json().catch(() => null)) as {
+        success?: string;
+        message?: string;
+      } | null;
+      if (result && String(result.success) === 'false') {
+        throw new Error(result.message || 'Relay refused the submission');
+      }
+    }
 
     trackEvent('form_submit', { mode: 'live', goal: outgoing.goal, time: outgoing.preferredTime });
     return {

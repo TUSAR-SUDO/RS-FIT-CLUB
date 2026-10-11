@@ -74,21 +74,53 @@ export function scrollToTop(immediate = true): void {
 /**
  * Scroll to an element or offset. Used by every in-page anchor so that the
  * fixed header height is always accounted for.
+ *
+ * `immediate` skips the easing entirely. Used by route changes that arrive with
+ * a hash (e.g. /programs#weight-training): the curtain is covering the screen at
+ * that moment, so an animated scroll would be invisible motion that also fires
+ * every reveal animation on the way past.
  */
-export function scrollToTarget(target: string | HTMLElement | number, offset = 0): void {
+export function scrollToTarget(
+  target: string | HTMLElement | number,
+  offset = 0,
+  immediate = false,
+): void {
   const extra = offset - headerHeight();
   if (instance) {
-    instance.scrollTo(target, { offset: extra, duration: 1 });
+    instance.scrollTo(
+      target,
+      immediate ? { offset: extra, immediate: true } : { offset: extra, duration: 1 },
+    );
     return;
   }
   if (typeof target === 'number') {
-    window.scrollTo({ top: target + extra, behavior: 'smooth' });
+    window.scrollTo({ top: target + extra, behavior: immediate ? 'auto' : 'smooth' });
     return;
   }
   const el = typeof target === 'string' ? document.querySelector<HTMLElement>(target) : target;
   if (!el) return;
   const top = el.getBoundingClientRect().top + window.scrollY + extra;
-  window.scrollTo({ top, behavior: 'smooth' });
+  window.scrollTo({ top, behavior: immediate ? 'auto' : 'smooth' });
+}
+
+/**
+ * Land on a deep-link target the way the browser itself would: honouring the
+ * element's own `scroll-margin-top`.
+ *
+ * `scrollToTarget` subtracts the header height, which is right for a section id
+ * with no margin of its own — but on a target that already carries
+ * `scroll-margin-top` (the programme cards do, so a native fragment jump clears
+ * the header) that compensation is counted twice and the page stops ~90px short.
+ */
+export function scrollToAnchor(target: HTMLElement, immediate = false): void {
+  const margin = Number.parseFloat(getComputedStyle(target).scrollMarginTop) || 0;
+  const top = Math.max(0, target.getBoundingClientRect().top + window.scrollY - margin);
+
+  if (instance) {
+    instance.scrollTo(top, immediate ? { immediate: true } : { duration: 1 });
+    return;
+  }
+  window.scrollTo({ top, behavior: immediate ? 'auto' : 'smooth' });
 }
 
 function headerHeight(): number {

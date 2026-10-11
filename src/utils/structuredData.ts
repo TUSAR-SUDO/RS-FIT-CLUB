@@ -7,9 +7,34 @@ import { isReal, siteConfig } from '../data/siteConfig';
    --------------------------------------------------------------------------- */
 
 export function healthClubSchema(): Record<string, unknown> {
-  const { business, location, contact, social, seo } = siteConfig;
+  const { business, location, contact, social, seo, hours, ratingAverage, ratingCount } =
+    siteConfig;
 
   const telephone = isReal(contact.phoneDisplay) ? contact.phoneDisplay : undefined;
+
+  /* Opening hours, one entry per row that carries a machine-readable spec.
+     Sunday has neither, so it is left out rather than guessed at. */
+  const openingHours = hours.rows
+    .filter((row) => row.confirmed && row.spec)
+    .map((row) => ({
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: row.spec?.days,
+      opens: row.spec?.opens,
+      closes: row.spec?.closes,
+    }));
+
+  /* 4.8 from 109 ratings, straight off the club's Google listing. Only emitted
+     when both halves are real — half a rating is worse than none. */
+  const aggregateRating =
+    isReal(ratingAverage) && isReal(ratingCount)
+      ? {
+          '@type': 'AggregateRating',
+          ratingValue: Number(ratingAverage),
+          reviewCount: Number(ratingCount),
+          bestRating: 5,
+          worstRating: 1,
+        }
+      : null;
 
   const sameAs = [social.facebook, social.instagram, social.youtube].filter(
     (url) => typeof url === 'string' && url.startsWith('http'),
@@ -43,6 +68,8 @@ export function healthClubSchema(): Record<string, unknown> {
     ...(location.lat !== null && location.lng !== null
       ? { geo: { '@type': 'GeoCoordinates', latitude: location.lat, longitude: location.lng } }
       : {}),
+    ...(openingHours.length ? { openingHoursSpecification: openingHours } : {}),
+    ...(aggregateRating ? { aggregateRating } : {}),
     areaServed: {
       '@type': 'City',
       name: `${business.city}, ${business.state}`,

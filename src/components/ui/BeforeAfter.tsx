@@ -5,7 +5,7 @@ import { Icon } from './Icon';
 import styles from './BeforeAfter.module.css';
 
 interface BeforeAfterProps {
-  /** The "before" visual — usually an ImagePlaceholder. */
+  /** The "before" visual — a Photo, or any frame that fills the slider. */
   before: ReactNode;
   /** The "after" visual, stacked on top and clipped by the handle. */
   after: ReactNode;

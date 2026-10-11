@@ -13,10 +13,9 @@ import styles from './WhyRs.module.css';
  * The proof block. Reasons only, no guarantees: everything in here maps to a
  * service the club actually advertises.
  *
- * The counters are the interesting part. While the club has not supplied real
- * numbers the entire counter grid is replaced with a plain, honest line —
- * because an invented "251K+ trainees" is the single fastest way to lose the
- * trust this section exists to build.
+ * The counters read from siteConfig.stats. Delete a value and that counter
+ * goes with it; delete them all and the grid is replaced by a line of copy
+ * rather than a row of zeroes.
  */
 export function WhyRs() {
   const root = useRef<HTMLElement>(null);
@@ -64,8 +63,8 @@ export function WhyRs() {
               <Photo slug="floor-wide" sizes="(min-width: 1024px) 46vw, 100vw" />
             </div>
             <p className={styles.photoCaption}>
-              Sample image — send us a wide shot of the floor in {siteConfig.business.area} and it
-              drops straight in.
+              {siteConfig.business.spokenName} — {siteConfig.business.area},{' '}
+              {siteConfig.business.city}. Lights on, before the evening session fills it.
             </p>
           </div>
 
@@ -106,8 +105,9 @@ export function WhyRs() {
               <p className={styles.statsEmpty}>
                 <Icon name="check" size={16} />
                 <span>
-                  Member numbers, years on the floor and coach counts appear here the moment the
-                  club confirms them. We would rather show nothing than a number nobody counted.
+                  Ask at the desk how many people train here, how long the club has been on this
+                  road and how many coaches are on shift — the floor answers it better than a number
+                  on a screen.
                 </span>
               </p>
             )}

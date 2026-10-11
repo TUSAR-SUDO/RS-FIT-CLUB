@@ -72,16 +72,21 @@
   background: var(--line);
 }
 
-/* ------------------------------------------------------- placeholder tokens
-   Anything the club still has to supply renders as [LIKE THIS] with a dashed
-   accent underline, so a page can never quietly ship invented data as if it
-   were real. It doubles as the client's to-do list, visible on the page. */
-.token {
-  color: var(--accent);
-  border-bottom: 1px dashed color-mix(in srgb, var(--accent) 60%, transparent);
-  padding-bottom: 0.05em;
-  font-style: normal;
-  cursor: help;
+/* ------------------------------------------------------------ soft tag pill
+   A small qualified note that sits after an item, e.g. the "Add-on" marker on
+   a membership inclusion. Deliberately quieter than the accent chip: it is a
+   qualifier, not a label. */
+.tag-soft {
+  display: inline-block;
+  margin-left: 0.4rem;
+  padding: 0.05rem 0.45rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  font-size: 0.6875rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  white-space: nowrap;
 }
 
 /* A 1px rule with a label sitting in it: "——— 03 / PROGRAMS ———" */

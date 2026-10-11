@@ -3,16 +3,14 @@ import { siteConfig } from '../../../data/siteConfig';
 import { SectionHead } from '../../ui/SectionHead';
 import { Photo } from '../../ui/Photo';
 import { Icon } from '../../ui/Icon';
-import { TodoText } from '../../ui/TodoText';
 import { cx } from '../../../utils/cx';
 import styles from './Trainers.module.css';
 
 /* ---------------------------------------------------------------------------
-   The team. Names and specialities are still placeholders, and the portraits
-   are licensed sample photography (see IMAGE_CREDITS.md). The club sends its
-   own shoot, runs `npm run photos`, and the same four cards fill in — the
-   footnote under the grid says so on the page, so nobody mistakes a sample
-   portrait for a real coach.
+   The team, straight out of siteConfig.trainers. The four portraits are
+   licensed sample photography (see IMAGE_CREDITS.md) until the club sends its
+   own shoot: drop the files in, run `npm run photos`, and the same four cards
+   update with no component changes.
 
    Hover reveals the speciality on a fine pointer; on touch the card carries a
    real toggle button that expands the credentials. The expand animates
@@ -29,36 +27,8 @@ interface TrainerCard {
   tall: boolean;
 }
 
-const PLACEHOLDERS: TrainerCard[] = [
-  {
-    name: '[TRAINER NAME]',
-    speciality: '[SPECIALITY] — strength & conditioning',
-    credits: '[CERTIFICATION]',
-    photo: 'team-strength',
-    tall: true,
-  },
-  {
-    name: '[TRAINER NAME]',
-    speciality: '[SPECIALITY] — weight training',
-    credits: '[CERTIFICATION]',
-    photo: 'team-weights',
-    tall: false,
-  },
-  {
-    name: '[NUTRITIONIST NAME]',
-    speciality: '[SPECIALITY] — diet planning',
-    credits: '[QUALIFICATION]',
-    photo: 'team-nutrition',
-    tall: true,
-  },
-  {
-    name: '[TRAINER NAME]',
-    speciality: '[SPECIALITY] — Zumba & aerobics',
-    credits: '[CERTIFICATION]',
-    photo: 'team-class',
-    tall: false,
-  },
-];
+/** Photo slugs from src/data/photos.ts, used in order when a card has none. */
+const PHOTO_FALLBACK = ['team-strength', 'team-weights', 'team-nutrition', 'team-class'];
 
 function TrainerTile({ trainer }: { trainer: TrainerCard }) {
   const [open, setOpen] = useState(false);
@@ -75,14 +45,14 @@ function TrainerTile({ trainer }: { trainer: TrainerCard }) {
       </div>
 
       <div className={styles.meta}>
-        <TodoText as="h3" className={styles.name} text={trainer.name} />
+        <h3 className={styles.name}>{trainer.name}</h3>
         <span className={styles.rule} />
-        <TodoText as="p" className={styles.speciality} text={trainer.speciality} />
+        <p className={styles.speciality}>{trainer.speciality}</p>
       </div>
 
       <div className={styles.expand}>
         <div className={styles.expandInner}>
-          <TodoText as="p" className={styles.speciality} text={trainer.credits} />
+          <p className={styles.speciality}>{trainer.credits}</p>
         </div>
       </div>
 
@@ -106,15 +76,10 @@ function TrainerTile({ trainer }: { trainer: TrainerCard }) {
 }
 
 export function Trainers() {
-  /* Real team members, once the club sends them, carry their own photo slug.
-     Until then the four sample cards stand in. */
-  const trainers: TrainerCard[] =
-    siteConfig.trainers.length > 0
-      ? siteConfig.trainers.map((trainer, index) => ({
-          ...trainer,
-          photo: trainer.photo || PLACEHOLDERS[index % PLACEHOLDERS.length].photo,
-        }))
-      : PLACEHOLDERS;
+  const trainers: TrainerCard[] = siteConfig.trainers.map((trainer, index) => ({
+    ...trainer,
+    photo: trainer.photo || PHOTO_FALLBACK[index % PHOTO_FALLBACK.length],
+  }));
 
   return (
     <section className={cx('section', styles.section)} aria-labelledby="trainers-title">

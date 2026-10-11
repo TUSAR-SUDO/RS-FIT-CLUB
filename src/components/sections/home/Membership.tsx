@@ -23,9 +23,8 @@ function PlanCard({ plan }: { plan: Plan }) {
         <span className={cx('micro', styles.planDuration)}>{plan.duration}</span>
       </div>
 
-      {/* A price is only ever printed from real config data. While it is still a
-          placeholder the slot reads as an obvious blank rather than a number
-          somebody guessed. */}
+      {/* Rates print straight from siteConfig.membership.plans. Remove a price
+          and that card just drops the line — never a figure nobody quoted. */}
       <p className={styles.price}>
         {isReal(plan.price) ? (
           <>
@@ -35,14 +34,7 @@ function PlanCard({ plan }: { plan: Plan }) {
             ) : null}
             <span className={styles.priceUnit}>/ {plan.duration}</span>
           </>
-        ) : (
-          <>
-            <span className={cx('token', styles.pricePending)} title="Rate to be confirmed">
-              [PRICE]
-            </span>
-            <span className={styles.priceUnit}>rate to be confirmed</span>
-          </>
-        )}
+        ) : null}
       </p>
 
       <p className={styles.tagline}>{plan.tagline}</p>
@@ -52,16 +44,8 @@ function PlanCard({ plan }: { plan: Plan }) {
           <li className={styles.include} key={item}>
             <Icon name="check" size={14} />
             <span>
-              {item}
-              {item.endsWith('*') ? (
-                <span
-                  className="token"
-                  style={{ marginLeft: '0.25rem' }}
-                  title="Add-on — to be confirmed"
-                >
-                  add-on
-                </span>
-              ) : null}
+              {item.replace(/\s\*$/, '')}
+              {item.endsWith('*') ? <span className="tag-soft">Add-on</span> : null}
             </span>
           </li>
         ))}
@@ -82,7 +66,7 @@ function PlanCard({ plan }: { plan: Plan }) {
 }
 
 export function Membership() {
-  const { plans, note, confirmed } = siteConfig.membership;
+  const { plans, note } = siteConfig.membership;
 
   return (
     <section className={cx('section', styles.section)} aria-labelledby="membership-title">
@@ -104,9 +88,7 @@ export function Membership() {
 
         <p className={styles.footnote}>
           <Icon name="check" size={15} />
-          <span>
-            {confirmed ? '* marked items are add-ons. Ask at the desk for current rates.' : note}
-          </span>
+          <span>{note}</span>
         </p>
       </div>
     </section>

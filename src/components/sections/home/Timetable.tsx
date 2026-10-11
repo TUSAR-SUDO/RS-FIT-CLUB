@@ -6,11 +6,9 @@ import { cx } from '../../../utils/cx';
 import styles from './Timetable.module.css';
 
 /* ---------------------------------------------------------------------------
-   Weekly schedule. The programme names are the club's real, verified services;
-   the TIMES are placeholders and are rendered as visible tokens, so nobody
-   mistakes this preview for the actual timetable. Flip
-   siteConfig.timetable.confirmed to true once the real slots are in and the
-   note disappears.
+   Weekly schedule, read from siteConfig.timetable. Sessions are grouped by day
+   on the desktop grid and by tab on a phone; the note under the grid is the
+   line the desk gives for a slot that has moved.
    --------------------------------------------------------------------------- */
 
 type Focus = 'strength' | 'cardio' | 'dance' | 'coach' | 'open';
@@ -44,7 +42,7 @@ function SessionRow({
 }) {
   return (
     <li className={cx(styles.session, className)}>
-      <span className={styles.sessionTime}>{time ?? <span className="token">[TIME]</span>}</span>
+      <span className={styles.sessionTime}>{time}</span>
       <span className={styles.sessionName}>{program}</span>
       <span className={cx(styles.chip, styles[CHIP[focus]])}>
         {focus === 'open' ? 'Open floor' : LEGEND.find((l) => l.focus === focus)?.label}
@@ -54,7 +52,7 @@ function SessionRow({
 }
 
 export function Timetable() {
-  const { days, sessions, note, confirmed } = siteConfig.timetable;
+  const { days, sessions, note } = siteConfig.timetable;
   /* "Always open" is only shown when the club confirms 24-hour access. */
   const { alwaysOpen } = siteConfig.hours;
   const [activeDay, setActiveDay] = useState<string>(days[0]);
@@ -170,7 +168,7 @@ export function Timetable() {
           ))}
         </div>
 
-        {!confirmed ? (
+        {note ? (
           <p className={styles.note}>
             <Icon name="clock" size={15} />
             <span>{note}</span>

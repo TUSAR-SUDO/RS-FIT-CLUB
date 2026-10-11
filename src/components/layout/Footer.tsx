@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { hasPhone, hasWhatsapp, isReal, siteConfig } from '../../data/siteConfig';
+import { addressLine, hasPhone, hasWhatsapp, hoursLine, siteConfig } from '../../data/siteConfig';
 import { buildWhatsAppLink } from '../../utils/whatsapp';
 import { trackEvent } from '../../utils/analytics';
 import { gsap, useGSAP } from '../../lib/gsap';
@@ -54,9 +54,9 @@ export function Footer() {
     return typeof url === 'string' && url.startsWith('http');
   });
 
-  const address = isReal(siteConfig.location.streetLine)
-    ? `${siteConfig.location.streetLine}, ${siteConfig.location.area}, ${siteConfig.location.city} ${siteConfig.location.pin}`
-    : `${siteConfig.business.area}, ${siteConfig.business.city}, ${siteConfig.business.state}`;
+  const address =
+    addressLine ||
+    `${siteConfig.business.area}, ${siteConfig.business.city}, ${siteConfig.business.state}`;
 
   return (
     <footer className={styles.footer}>
@@ -150,13 +150,7 @@ export function Footer() {
           </a>
           <p className={styles.metaRow}>
             <Icon name="clock" size={15} />
-            <span>
-              {siteConfig.hours.alwaysOpen
-                ? 'Open 24 hours'
-                : siteConfig.hours.confirmed && siteConfig.hours.rows[0]
-                  ? `${siteConfig.hours.rows[0].days}: ${siteConfig.hours.rows[0].time}`
-                  : 'Hours to be confirmed'}
-            </span>
+            <span>{hoursLine}</span>
           </p>
         </div>
       </div>
@@ -173,10 +167,13 @@ export function Footer() {
           <span>
             © {new Date().getFullYear()} {siteConfig.business.name}, {siteConfig.business.city}.
           </span>
-          <span>Email address pending the club&rsquo;s confirmation before launch.</span>
+          <span>
+            {siteConfig.business.area}, {siteConfig.business.city}, {siteConfig.business.state}.
+            Photography: licensed stock.
+          </span>
         </div>
         <p className={styles.credit}>
-          {isReal(siteConfig.footer.builtBy) ? (
+          {siteConfig.footer.builtBy ? (
             <span>
               Website by{' '}
               {siteConfig.footer.builtByUrl ? (
@@ -185,10 +182,7 @@ export function Footer() {
                 siteConfig.footer.builtBy
               )}
             </span>
-          ) : (
-            /* Credit slot stays visible-but-honest until the name is supplied. */
-            <span>Website by [freelancer name]</span>
-          )}
+          ) : null}
         </p>
       </div>
     </footer>
