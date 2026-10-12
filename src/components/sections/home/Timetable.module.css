@@ -150,6 +150,7 @@
   display: none;
 }
 
+
 .tab {
   flex: none;
   min-width: 56px;
@@ -173,6 +174,26 @@
   background: var(--accent);
   border-color: var(--accent);
   color: var(--accent-ink);
+}
+
+/* Seven days on a phone: the tabs share the row instead of pushing Saturday
+   and Sunday off the right edge, where a hidden scroll nobody discovers used
+   to keep them. Declared after the rules above on purpose — same specificity,
+   so source order is what makes it win. */
+@media (max-width: 1023px) {
+  .tabs {
+    gap: 0.25rem;
+    overflow-x: visible;
+    padding-bottom: 0.6rem;
+  }
+
+  .tab {
+    flex: 1 1 0;
+    min-width: 0;
+    padding-inline: 0.2rem;
+    font-size: 0.625rem;
+    letter-spacing: 0.02em;
+  }
 }
 
 .list {

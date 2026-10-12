@@ -1,8 +1,15 @@
 /* ---------------------------------------------------------------------------
    MOBILE ACTION BAR
-   Thumb-reachable conversion bar. Appears once the hero is out of the way,
-   retracts while the lead form is on screen (so it never covers the thing it
-   is asking you to do), and respects the notch/home-indicator safe area.
+   Thumb-reachable conversion bar, and on a phone it is the single most
+   valuable strip of pixels on the site. It appears once the hero is out of the
+   way, retracts while the lead form is on screen (so it never covers the thing
+   it is asking you to do), and respects the notch/home-indicator safe area.
+
+   It is deliberately the loudest surface in the phone layout: opaque rather
+   than tinted (the previous translucent version washed out over photographs),
+   lifted off the page with a shadow and an accent hairline, and each action is
+   a chip with its own fill instead of bare grey text. The trial chip carries a
+   short glow pulse when the bar arrives — one gesture, three beats, then still.
    --------------------------------------------------------------------------- */
 
 .bar {
@@ -11,17 +18,34 @@
   right: 0;
   bottom: 0;
   z-index: var(--z-bar);
-  display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: 1fr;
-  gap: 1px;
-  padding: 0.5rem var(--shell-pad);
-  padding-bottom: calc(0.5rem + env(safe-area-inset-bottom, 0px));
-  background: color-mix(in srgb, var(--bg-1) 96%, transparent);
-  border-top: 1px solid var(--line);
-  transform: translate3d(0, 118%, 0);
+  /* Flex rather than a three-up grid: the trial chip is the one that should win
+     the space, and it is the label most likely to wrap on a 360px phone. */
+  display: flex;
+  align-items: stretch;
+  gap: 0.5rem;
+  padding: 0.55rem var(--shell-pad);
+  padding-bottom: calc(0.55rem + env(safe-area-inset-bottom, 0px));
+  background: linear-gradient(180deg, var(--bg-2), var(--bg-1) 70%);
+  border-top: 1px solid var(--line-strong);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 -16px 36px rgba(0, 0, 0, 0.72);
+  transform: translate3d(0, 130%, 0);
   transition: transform var(--dur-3) var(--ease-expo);
   will-change: transform;
+}
+
+/* The accent hairline that catches the eye as the bar slides in. */
+.bar::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent) 30%, var(--accent) 70%, transparent);
+  opacity: 0.85;
+  pointer-events: none;
 }
 
 .visible {
@@ -36,56 +60,142 @@
 }
 
 .action {
+  position: relative;
+  /* Basis `auto`, so each chip starts at the width of its own word and the
+     leftover space is shared — no label can be pushed past its chip edge on a
+     narrow phone. */
+  flex: 1 1 auto;
+  min-width: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.4rem;
-  min-height: 48px;
+  min-height: var(--bar-chip-h);
+  white-space: nowrap;
   padding-inline: 0.5rem;
   font-family: var(--font-display);
-  font-size: 0.625rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.035em;
   text-transform: uppercase;
-  color: var(--text-dim);
-  background: transparent;
+  color: var(--text);
+  background: var(--bg-3);
+  border: 1px solid var(--line-strong);
+  /* The same chamfer the rest of the site uses, so the bar reads as part of
+     the design rather than an OS chrome element. */
+  clip-path: polygon(
+    8px 0,
+    100% 0,
+    100% calc(100% - 8px),
+    calc(100% - 8px) 100%,
+    0 100%,
+    0 8px
+  );
   transition:
     color var(--dur-2) var(--ease-out),
     background-color var(--dur-2) var(--ease-out),
+    border-color var(--dur-2) var(--ease-out),
     transform var(--dur-1) var(--ease-out);
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
 }
 
+.action svg {
+  flex: none;
+  /* One step down from the icon's own default: the labels have to fit three
+     chips across a 360px phone, and the icon is decoration, the word is not. */
+  width: 16px;
+  height: 16px;
+}
+
+/* A 360px phone is the narrowest screen worth designing for here. The words
+   stay whole, the tracking tightens. */
+@media (max-width: 380px) {
+  .action {
+    font-size: 0.625rem;
+    letter-spacing: 0.015em;
+    gap: 0.3rem;
+    padding-inline: 0.35rem;
+  }
+}
+
 .action:active {
   transform: scale(0.96);
-  background: rgba(255, 255, 255, 0.04);
   transition-duration: 70ms;
 }
 
+/* Call — the plainest of the three, and still a filled chip. */
 .call {
   color: var(--text);
 }
+.call svg {
+  color: var(--accent);
+}
+.call:active {
+  background: var(--bg-3);
+  border-color: var(--line-strong);
+}
 
+/* WhatsApp — tinted with the app's own green so it is recognised before it is
+   read. The green is the message colour, not a brand endorsement. */
 .whatsapp {
-  color: #4ade80;
+  color: #62ef95;
+  background: color-mix(in srgb, #25d366 12%, var(--bg-3));
+  border-color: color-mix(in srgb, #25d366 38%, transparent);
+}
+.whatsapp:active {
+  background: color-mix(in srgb, #25d366 20%, var(--bg-3));
 }
 
+/* Free trial — the only filled-accent element on the phone screen, with a
+   glow so it reads as lit rather than printed. */
 .primary {
-  position: relative;
+  flex-grow: 1.4;
   color: var(--accent-ink);
-  background: var(--accent);
-  font-weight: 700;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--accent) 88%, #ffffff),
+    var(--accent)
+  );
+  border-color: color-mix(in srgb, var(--accent) 60%, #ffffff);
+  box-shadow: 0 6px 20px var(--accent-glow);
 }
-
 .primary:active {
   background: color-mix(in srgb, var(--accent) 84%, #fff);
 }
 
-/* Single-action layout (when the club has not supplied a number yet). */
+/* Arrival: three expanding rings, then it holds still. Motion only draws the
+   eye here; the button is equally visible without it. */
+@keyframes barPulse {
+  0% {
+    box-shadow:
+      0 6px 20px var(--accent-glow),
+      0 0 0 0 color-mix(in srgb, var(--accent) 55%, transparent);
+  }
+  70% {
+    box-shadow:
+      0 6px 20px var(--accent-glow),
+      0 0 0 14px transparent;
+  }
+  100% {
+    box-shadow:
+      0 6px 20px var(--accent-glow),
+      0 0 0 14px transparent;
+  }
+}
+
+.visible .primary {
+  animation: barPulse 2.1s var(--ease-out) 0.45s 3;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .bar {
     will-change: auto;
     transition-duration: 1ms;
+  }
+  .visible .primary {
+    animation: none;
   }
 }

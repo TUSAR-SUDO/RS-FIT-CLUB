@@ -103,6 +103,15 @@
   --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-snap: cubic-bezier(0.2, 1.35, 0.4, 1);
 
+  /* --------------------------------------------------------- mobile bar */
+  /* The sticky Call / WhatsApp / Free trial chips, and the height the page
+     reserves at the bottom of every phone layout so nothing hides behind
+     them (see the body padding in global.css). 50px is a comfortable thumb
+     target, above the 44px floor and below the point where the bar starts
+     eating the screen. */
+  --bar-chip-h: 50px;
+  --bar-h: 69px;
+
   /* --------------------------------------------------------------- elevation */
   --z-bar: 45;
   --z-header: 50;

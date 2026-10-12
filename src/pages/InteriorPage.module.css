@@ -48,6 +48,20 @@
 .breadcrumb a:hover {
   color: var(--accent);
 }
+
+/* On a phone the breadcrumb link is a way back up the site, not decoration:
+   it gets a thumb-sized hit area even though the type stays small. */
+@media (max-width: 1023px) {
+  .breadcrumb {
+    min-height: 44px;
+  }
+
+  .breadcrumb a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+}
 .crumbSep {
   color: var(--line-strong);
 }
@@ -186,6 +200,10 @@
 
 .cardMedia img {
   transform: scale(1.03);
+  /* Brightened for the same reason the home rail does it: the scrim under the
+     copy has to stay dark enough for white type, so the photograph earns its
+     separation from contrast rather than from a lighter gradient. */
+  filter: saturate(0.98) contrast(1.05) brightness(1.16);
   transition: transform 1.1s var(--ease-out);
 }
 
@@ -201,12 +219,13 @@
   background:
     linear-gradient(
       180deg,
-      color-mix(in srgb, var(--bg-0) 52%, transparent) 0%,
-      color-mix(in srgb, var(--bg-0) 76%, transparent) 30%,
-      color-mix(in srgb, var(--bg-0) 92%, transparent) 58%,
-      color-mix(in srgb, var(--bg-0) 98%, transparent) 100%
+      color-mix(in srgb, var(--bg-0) 24%, transparent) 0%,
+      color-mix(in srgb, var(--bg-0) 54%, transparent) 26%,
+      color-mix(in srgb, var(--bg-0) 80%, transparent) 52%,
+      color-mix(in srgb, var(--bg-0) 97%, transparent) 86%,
+      color-mix(in srgb, var(--bg-0) 99%, transparent) 100%
     ),
-    linear-gradient(90deg, color-mix(in srgb, var(--bg-0) 42%, transparent), transparent 62%);
+    linear-gradient(90deg, color-mix(in srgb, var(--bg-0) 34%, transparent), transparent 60%);
   pointer-events: none;
 }
 
@@ -337,6 +356,10 @@
 /* --------------------------------------------------------- tag badge */
 .tag {
   display: inline-flex;
+  /* Content-width, never stretched: as a grid item on a phone the tag was
+     filling the whole cell, which turned a colour-coded label into something
+     that read as a button or a progress bar. */
+  width: fit-content;
   align-items: center;
   gap: 0.35rem;
   padding: 0.25rem 0.55rem;
@@ -673,6 +696,22 @@
 }
 .contactLink:hover {
   opacity: 0.8;
+}
+
+/* Phones: these four links — call, WhatsApp, email, directions — are the whole
+   point of the contact page, and the default line box gives them a 26px hit
+   area. Each one gets the full 44px, so the row is tappable where a thumb
+   actually lands rather than only on the glyphs. */
+@media (max-width: 1023px) {
+  .contactLink,
+  a.infoRow {
+    min-height: 44px;
+    padding-block: 0.35rem;
+  }
+
+  .infoRow {
+    min-height: 44px;
+  }
 }
 
 /* ----------------------------------------------------- map embed */

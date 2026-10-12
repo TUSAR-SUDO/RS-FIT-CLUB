@@ -99,6 +99,38 @@
   flex: none;
   color: var(--text-faint);
 }
+
+/* Phones: these rows are thumb targets, not print. Every link and every
+   tel:/mailto: row grows to the 44px floor and the whole row is the target
+   rather than the glyphs alone — the footer is where a phone visitor looks for
+   the number, so a 19px-tall link there is a lost call. Hover states are
+   dropped at the same time: there is no pointer to hover with. */
+@media (max-width: 1023px) {
+  .links {
+    gap: 0;
+  }
+
+  .link {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    padding-block: 0;
+  }
+
+  .link:hover {
+    transform: none;
+  }
+
+  .metaRow {
+    align-items: center;
+    min-height: 44px;
+    padding-block: 0.15rem;
+  }
+
+  .metaRow svg {
+    margin-top: 0;
+  }
+}
 a.metaRow:hover {
   color: var(--accent);
 }

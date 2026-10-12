@@ -190,6 +190,18 @@ a {
   font-size: var(--fs-micro);
 }
 
+/* ======================================================== mobile action bar
+   The sticky Call / WhatsApp / Free trial strip (see MobileActionBar) floats
+   over the bottom of every phone page — including the footer — so the page
+   reserves its full height, safe area included, and the last row of content is
+   never sitting underneath it. There is no bar above 1024px, so this costs
+   nothing on a desktop. */
+@media (max-width: 1023px) {
+  body {
+    padding-bottom: calc(var(--bar-h) + env(safe-area-inset-bottom, 0px));
+  }
+}
+
 /* ============================================================== film grain +
    vignette. Static, non-animated, pointer-events: none — costs one composited
    layer and no per-frame work, which matters on mid-range Android. */

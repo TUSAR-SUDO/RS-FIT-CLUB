@@ -408,6 +408,21 @@
   color: var(--accent);
 }
 
+/* On a phone the phone number and the email address are the two links worth
+   tapping in this column, so they get a full-height hit area each rather than
+   the 19px line box the text would otherwise give them. */
+@media (max-width: 1023px) {
+  .infoValue a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+
+  .infoLabel {
+    margin-bottom: 0;
+  }
+}
+
 /* -------------------------------------------------------------- map slot */
 .mapSlot {
   position: relative;
@@ -506,6 +521,17 @@
 
 .mapLink svg {
   transition: transform var(--dur-2) var(--ease-out);
+}
+
+@media (max-width: 1023px) {
+  .mapFoot {
+    padding-block: 0.35rem;
+  }
+
+  .mapLink {
+    min-height: 44px;
+    padding-inline: 0.25rem;
+  }
 }
 
 .mapLink:hover svg {

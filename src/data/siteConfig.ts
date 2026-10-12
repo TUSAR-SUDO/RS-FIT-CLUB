@@ -132,6 +132,19 @@ export interface Testimonial {
 
 /* ============================================================= the config */
 
+/* The club opened its doors in April 2020 (confirmed by the client). The years
+   counter below is derived from that date rather than typed in, so it cannot
+   drift: a hard-coded figure was wrong the moment the opening date was known,
+   and it would have been wrong again every April. */
+const FOUNDED_YEAR = 2020;
+const FOUNDED_MONTH = 3; /* April, zero-based as Date uses it */
+
+const yearsOnTheFloor = (() => {
+  const now = new Date();
+  const elapsed = now.getFullYear() - FOUNDED_YEAR;
+  return now.getMonth() < FOUNDED_MONTH ? elapsed - 1 : elapsed;
+})();
+
 export const siteConfig = {
   /* ---------------------------------------------------------- identity */
   business: {
@@ -150,6 +163,10 @@ export const siteConfig = {
     /** From the club's public listing. */
     email: 'rsfitness@gmail.com',
     emailConfirmed: true,
+    /** CONFIRMED by the client: the gym opened in April 2020. */
+    founded: 'April 2020',
+    /** Machine-readable form, for schema.org foundingDate. */
+    foundedIso: '2020-04',
   },
 
   /* ---------------------------------------------------------- contact
@@ -272,7 +289,8 @@ export const siteConfig = {
      row hides itself. */
   stats: [
     { label: 'Members on the floor', value: 400, suffix: '+' },
-    { label: 'Years training Bhubaneswar', value: 8, suffix: '' },
+    /* Counted from April 2020 — see yearsOnTheFloor above. */
+    { label: 'Years training Bhubaneswar', value: yearsOnTheFloor, suffix: '' },
     { label: 'Coaches & nutritionists', value: 6, suffix: '' },
     { label: 'Sessions a week', value: 42, suffix: '' },
   ] as Stat[],

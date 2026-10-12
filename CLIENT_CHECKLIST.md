@@ -90,10 +90,14 @@ open floor session on Sunday), all inside the published 5:30 am – 10 pm.
 
 ## 7. Numbers and transformations
 
-Live: counters reading **400+ members**, **8 years**, **6 coaches & nutritionists**, **42 sessions a
+Live: counters reading **400+ members**, **6 years**, **6 coaches & nutritionists**, **42 sessions a
 week**, and three member stories (Rakesh, Sneha, Debasish) beside a before/after slider.
 
-- [ ] **The four numbers**, so the counters tell the truth. Delete any you would rather not publish.
+The years counter is counted from your opening date — **April 2020**, which you confirmed — so it
+looks after itself and does not need revisiting.
+
+- [ ] **The other three numbers** (members, coaches, sessions a week), so the counters tell the
+truth. Delete any you would rather not publish.
 - [ ] **Three consented before/after pairs** with a first name, the goal, and how long it took — then
       the current sample pairs are replaced.
 - [ ] Written consent from each member whose photo goes up. A WhatsApp "yes, put mine" is enough as

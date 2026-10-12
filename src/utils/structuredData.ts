@@ -51,6 +51,7 @@ export function healthClubSchema(): Record<string, unknown> {
     url: seo.siteUrl,
     image: `${seo.siteUrl}${seo.ogImage}`,
     email: business.email,
+    ...(isReal(business.foundedIso) ? { foundingDate: business.foundedIso } : {}),
     ...(telephone ? { telephone } : {}),
     ...(sameAs.length ? { sameAs } : {}),
     ...(hasAddress
