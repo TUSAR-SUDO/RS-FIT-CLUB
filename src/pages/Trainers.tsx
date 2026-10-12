@@ -7,6 +7,8 @@ import { MaskedLines } from '../components/ui/MaskedLines';
 import { RegistrationMarks } from '../components/ui/RegistrationMarks';
 import { SectionHead } from '../components/ui/SectionHead';
 import { Photo } from '../components/ui/Photo';
+import { CoachFigure } from '../components/ui/CoachFigure';
+import { OwnerFigure } from '../components/ui/OwnerFigure';
 import { Button } from '../components/ui/Button';
 import { Icon } from '../components/ui/Icon';
 import { cx } from '../utils/cx';
@@ -15,42 +17,54 @@ import s from './InteriorPage.module.css';
 /* ---------------------------------------------------------------------------
    The team.
 
-   Reads siteConfig.trainers, which carries the four roles the club staffs:
-   strength and conditioning, weight training, nutrition and group classes.
-   The portraits come from the photo pipeline, so replacing them with the
-   club's own shoot is `npm run photos` and no component changes.
+   Reads siteConfig.trainers, which now carries the club's real line-up: the
+   owner and the trainer, both of them real people, both of them photographed or
+   cut out by the club itself. Four licensed portraits of four invented coaches
+   used to run here; they are gone, and the four services they covered are
+   attributed to the two people who actually run them.
+
+   The trainer's background-removed cut-out is the page's one piece of theatre —
+   see CoachFigure.
    --------------------------------------------------------------------------- */
 
 interface TrainerCard {
   name: string;
   speciality: string;
   credits: string;
-  /** Key into src/data/photos.ts. */
-  photo: string;
+  /** Key into src/data/photos.ts, or null when the card shows a cut-out. */
+  photo: string | null;
+  cutout?: 'owner' | 'trainer' | null;
 }
 
-/** Photo slugs from src/data/photos.ts, used in order when a card has none. */
-const PHOTO_FALLBACK = ['team-strength', 'team-weights', 'team-nutrition', 'team-class'];
+/** Card portrait sizes: half the shell on desktop, near-full on a phone. */
+const CARD_SIZES = '(min-width: 1024px) 22vw, (min-width: 640px) 44vw, 92vw';
 
+/* The four things this floor runs, and who runs each of them. `who` is the
+   client's split, not ours: strength, weights, diet and the classes all happen
+   here, they are just run by two people. */
 const ROLES = [
   {
     icon: 'barbell' as const,
     title: 'Strength & conditioning',
+    who: 'Suraj',
     body: 'Squat, bench, deadlift and the accessory work that keeps them moving. Programs run in cycles so the bar goes up every month, on paper, not in somebody’s memory.',
   },
   {
     icon: 'dumbbell' as const,
     title: 'Weight training',
+    who: 'Badal',
     body: 'The floor coach who fixes your setup before it becomes an injury, loads the bar sensibly for your first month, and keeps the exercise card current.',
   },
   {
     icon: 'plate' as const,
     title: 'Diet planning',
-    body: 'A nutritionist working from Odia home food — rice, dal, roti, eggs. The plate plan is written for your kitchen and reviewed with you, not photocopied.',
+    who: 'Badal',
+    body: 'A plate plan built from Odia home food — rice, dal, roti, eggs. Written for the kitchen you actually cook in and reviewed with you, not photocopied.',
   },
   {
     icon: 'music' as const,
     title: 'Zumba & aerobics',
+    who: 'Badal',
     body: 'Group classes for the days when the barbell is the wrong answer: high-energy music, low-impact options, nobody watching what you can’t do yet.',
   },
 ];
@@ -87,11 +101,12 @@ export default function Trainers() {
     ]),
   });
 
-  const trainers: TrainerCard[] = siteConfig.trainers.map((trainer, index) => ({
+  const trainers: TrainerCard[] = siteConfig.trainers.map((trainer) => ({
     name: trainer.name,
     speciality: trainer.speciality,
     credits: trainer.credits,
-    photo: trainer.photo || PHOTO_FALLBACK[index % PHOTO_FALLBACK.length],
+    photo: trainer.photo,
+    cutout: trainer.cutout,
   }));
 
   return (
@@ -123,9 +138,9 @@ export default function Trainers() {
           </div>
 
           <p className={cx('lead', s.heroLead)}>
-            A coach who knows your name, your old injury and which side you favour. The club is run
-            by a team of coaches and nutritionists on one floor, so the plan on your card and the
-            plan on your plate come from people who talk to each other.
+            A coach who knows your name, your old injury and which side you favour. The owner and his
+            trainer work the same floor, so the plan on your card and the plan on your plate come
+            from the same room.
           </p>
         </div>
       </header>
@@ -137,20 +152,31 @@ export default function Trainers() {
             id="team-title"
             index="01"
             label="The line-up"
-            title={['Four seats', 'on the floor.']}
-            lead="Four roles on the floor: strength and conditioning, weight training, nutrition and group classes. Every one of them is a service the club already runs."
+            title={['Two people', 'run this floor.']}
+            lead="The owner and his trainer, working the same room: the owner writes the programme and the trainer counts the reps. Between them they cover the weights, the plate and the classes."
             ghost="Team"
           />
 
-          <div className={s.quadGrid} style={{ marginTop: 'var(--sp-6)' }}>
+          <div className={s.teamGrid} style={{ marginTop: 'var(--sp-6)' }}>
             {trainers.map((trainer, index) => (
               <article className={s.trainerCard} key={`${trainer.name}-${index}`}>
                 <div className={s.trainerPhoto}>
-                  <Photo
-                    slug={trainer.photo}
-                    sizes="(min-width: 1024px) 22vw, (min-width: 640px) 46vw, 92vw"
-                    alt={`${trainer.name} — ${trainer.speciality}`}
-                  />
+                  {trainer.cutout ? (
+                    /* The owner: the club sent a cut-out, not a framed photo,
+                       and the site shows him that way everywhere. */
+                    <OwnerFigure
+                      className={s.trainerCutout}
+                      renderWidth={560}
+                      sizes={CARD_SIZES}
+                      quiet
+                    />
+                  ) : trainer.photo ? (
+                    <Photo
+                      slug={trainer.photo}
+                      sizes={CARD_SIZES}
+                      alt={`${trainer.name} — ${trainer.speciality}`}
+                    />
+                  ) : null}
                 </div>
 
                 <div className={s.trainerInfo}>
@@ -160,6 +186,46 @@ export default function Trainers() {
                 </div>
               </article>
             ))}
+          </div>
+
+          {/* The trainer a second time, and deliberately not as a third card:
+              cut out of his own photograph and set loose in the page, leaning
+              towards the pointer and drifting against the panel as you scroll
+              it. A wide band with copy beside him reads as a feature; a third
+              tile in the row would have read as a duplicate. */}
+          <div className={s.teamFeature}>
+            <CoachFigure
+              className={s.teamFigure}
+              name="Badal"
+              role="Weights · strength · diet · Zumba"
+              alt="Badal, the trainer at RS Fit Club, on the gym floor"
+              sizes="(min-width: 820px) 32vw, 92vw"
+            />
+
+            <div className={s.teamFeatureCopy}>
+              <p className="micro micro--accent">The trainer</p>
+              <h3 className={s.teamFeatureName}>Ask for Badal by name</h3>
+              <p className={s.teamFeatureLead}>
+                Strength, weights, diet planning and the classes: one man runs all four on this
+                floor. That is also why the plan on your card and the plan on your plate agree with
+                each other — they were written by the same person, in the same week.
+              </p>
+              <ul className={s.teamFeatureList}>
+                <li>Strength &amp; weight training on the floor</li>
+                <li>Diet planning built on Odia home food</li>
+                <li>Zumba &amp; aerobics classes</li>
+                <li>Exercise cards, rewritten as you get stronger</li>
+              </ul>
+              <div className={s.teamFeatureActions}>
+                <Button
+                  variant="secondary"
+                  icon="arrow-right"
+                  onClick={() => startLead({ source: 'trainers-badal' })}
+                >
+                  Book a session with him
+                </Button>
+              </div>
+            </div>
           </div>
 
           <p className={s.footnote}>
@@ -179,7 +245,7 @@ export default function Trainers() {
             index="02"
             label="What each one does"
             title={['Four jobs,', 'one room.']}
-            lead="Every role below maps to a service the club already runs — nothing on this page is a role the club does not staff."
+            lead="Four jobs on this floor, run by the two people above. Every one of them is a service the club already runs — nothing on this page is a job the club does not staff."
             ghost="Roles"
           />
 
@@ -191,6 +257,10 @@ export default function Trainers() {
                 </span>
                 <h3 className={s.cardTitle}>{role.title}</h3>
                 <p className={s.cardBody}>{role.body}</p>
+                <p className={s.roleWho}>
+                  <Icon name="check" size={13} />
+                  <span>Run by {role.who}</span>
+                </p>
               </article>
             ))}
           </div>

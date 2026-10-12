@@ -59,6 +59,18 @@
   opacity: 0.5;
 }
 
+/* Small plates: the same rim light, pulled right back. At card size the hero's
+   version floods the whole tile with magenta and the cutout loses its subject. */
+.figure--quiet::before {
+  inset: 14% 8% 26% 12%;
+  filter: blur(24px);
+  opacity: 0.4;
+}
+
+.figure--quiet::after {
+  display: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .figure::before {
     filter: none;

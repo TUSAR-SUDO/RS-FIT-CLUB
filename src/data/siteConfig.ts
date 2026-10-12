@@ -478,48 +478,46 @@ export const siteConfig = {
     'Results vary from person to person. Photos published only with the member’s consent.',
 
   /* ------------------------------------------------------------- trainers
-     STAND-IN TEAM. The names are ours, the portraits are licensed sample
-     photography, and the specialities mirror the roles the club advertises.
-     Replace names, credits and photos with the club's own line-up. */
+     THE CLUB'S OWN PEOPLE. These are the two who run this floor — the owner
+     and the trainer — and both faces are real: the owner's cut-out (the same
+     figure the hero and the founder block use) and the photograph the club
+     sent of Badal. Nothing here is a licensed portrait of a stranger standing
+     in for staff again.
+
+     Between them they cover the four things the club actually runs: strength
+     and weight training, diet planning, and the Zumba and aerobics classes.
+     That split is the client's, not ours; the four services are unchanged, they
+     are simply run by two people rather than four invented ones. */
   trainers: [
     {
-      name: 'Rakesh Sahoo',
-      speciality: 'Strength & conditioning',
-      credits: 'Certified Personal Trainer · 6 years on the floor',
-      photo: 'team-strength',
+      /* Mirrors siteConfig.owner.name — the two must stay the same person. */
+      name: 'Suraj',
+      speciality: 'Founder & head coach',
+      credits: 'Strength and weight training · writes the exercise card you carry',
+      photo: null,
+      cutout: 'owner' as const,
       tall: true,
     },
     {
-      name: 'Bikash Panda',
-      speciality: 'Weight training',
-      credits: 'Certified Personal Trainer · exercise card planning',
-      photo: 'team-weights',
-      tall: false,
-    },
-    {
-      name: 'Sunita Mohanty',
-      speciality: 'Diet planning',
-      credits: 'B.Sc. Nutrition · Odia home-food plans',
-      photo: 'team-nutrition',
-      tall: true,
-    },
-    {
-      name: 'Priya Das',
-      speciality: 'Zumba & aerobics',
-      credits: 'Group class instructor · certified in Zumba & step aerobics',
-      photo: 'team-class',
+      name: 'Badal',
+      speciality: 'Weights, diet & classes',
+      credits: 'Strength · weight training · diet planning · Zumba & aerobics',
+      photo: 'team-badal',
+      cutout: null,
       tall: false,
     },
   ] as Array<{
     name: string;
     speciality: string;
     credits: string;
-    /** Slug from src/data/photos.ts, e.g. 'team-strength'. */
-    photo: string;
+    /** Slug from src/data/photos.ts, or null when the card shows a cut-out. */
+    photo: Nullable<string>;
+    /** Transparent figure from src/data/media.ts ('owner' | 'trainer'). */
+    cutout?: 'owner' | 'trainer' | null;
     tall: boolean;
   }>,
   trainersHint:
-    'Coaches and a nutritionist on the same floor, so the plan on your card and the plan on your plate come from people who talk to each other.',
+    'Weights, diet and classes run by the two people on this page, on one floor — so the plan on your card and the plan on your plate come from the same room.',
 
   /* ------------------------------------------------------------ timetable
      STAND-IN TIMES. The programmes and the days are the club's real services;

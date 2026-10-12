@@ -93,6 +93,18 @@ PHOTOS: dict[str, dict] = {
         "alt": "Nutritionist planning a diet",
         "credit": "Pexels 16216729",
     },
+    # The club's own trainer. A real photograph of the man who coaches here, not
+    # licensed stock, so the credit line says who supplied it rather than
+    # claiming a stock id. Cropped to the same 4:5 the other people cards use,
+    # anchored near the top so the face and the raised arms both stay in frame.
+    "team-badal": {
+        "ratio": 4 / 5,
+        "ax": 0.5,
+        "ay": 0.06,
+        "widths": [400, 600, 800, 1120],
+        "alt": "Badal, the trainer at RS Fit Club, on the gym floor",
+        "credit": "Client photograph — RS Fit Club",
+    },
     # ------------------------------------------------------------------ cards
     # Backgrounds for the eight programme cards (home rail + /programs grid).
     # Portrait 4:5, because that is the card's own shape and the crop has to

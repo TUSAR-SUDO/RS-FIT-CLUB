@@ -501,6 +501,9 @@
 }
 
 .trainerPhoto {
+  /* Positioned, so an absolutely placed cut-out is clipped by the plate rather
+     than stretching down over the person's name. */
+  position: relative;
   aspect-ratio: 4/5;
   overflow: hidden;
   background: var(--bg-2);
@@ -510,6 +513,146 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+/* --------------------------------------------------------- the line-up
+   The two people, as a pair of cards, and then the trainer again as a wide
+   feature band rather than a third tile: laid out that way the cut-out reads as
+   a deliberate second treatment, not a repeated portrait. */
+.teamGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(0.75rem, 2vw, 1.5rem);
+  /* Two people, so the pair is capped rather than stretched across the shell:
+     a 4:5 portrait 630px wide is a billboard, not a team card. */
+  max-width: 800px;
+}
+
+/* Under 560px a portrait has no room to be a portrait two-up: the pair stacks
+   and each face gets the full width of the phone. */
+@media (max-width: 559px) {
+  .teamGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.teamFeature {
+  display: grid;
+  gap: var(--sp-4);
+  margin-top: var(--sp-5);
+  align-items: center;
+}
+
+@media (min-width: 820px) {
+  .teamFeature {
+    grid-template-columns: minmax(0, 320px) minmax(0, 1fr);
+    gap: var(--sp-6);
+  }
+}
+
+.teamFigure {
+  min-width: 0;
+  max-width: 380px;
+}
+
+/* On a phone the stacked card and this panel put the same portrait on screen
+   twice in a row, which reads as a mistake — and the panel's entire effect is a
+   pointer tilt, which a thumb cannot use. The panel is decorative and the copy
+   beside it carries the meaning, so on a narrow screen the picture steps aside
+   and the words stay. */
+@media (max-width: 559px) {
+  .teamFigure {
+    display: none;
+  }
+}
+
+.teamFeatureCopy {
+  display: grid;
+  gap: 0.7rem;
+  align-content: center;
+}
+
+.teamFeatureName {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(1.15rem, 2.2vw, 1.6rem);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+}
+
+.teamFeatureLead {
+  margin: 0;
+  max-width: 52ch;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--text-dim);
+  text-wrap: pretty;
+}
+
+.teamFeatureList {
+  display: grid;
+  gap: 0.35rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.875rem;
+  color: var(--text-dim);
+}
+
+.teamFeatureList li {
+  display: flex;
+  align-items: baseline;
+  gap: 0.55rem;
+}
+
+.teamFeatureList li::before {
+  content: '';
+  flex: none;
+  width: 6px;
+  height: 6px;
+  background: var(--accent);
+  transform: translateY(-2px) rotate(45deg);
+}
+
+.teamFeatureActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 0.35rem;
+}
+
+/* The owner's cut-out inside a card plate. `cover` with a high object-position
+   keeps the head and shoulders and lets the lower frame go — the crop a framed
+   portrait would get, rather than a small figure stranded in a large tile. */
+.trainerCutout {
+  position: absolute;
+  inset: 0;
+}
+
+.trainerCutout img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 16%;
+}
+
+/* Who runs the role, under the role's own description. */
+.roleWho {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin: 0;
+  font-size: var(--fs-micro);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.roleWho svg {
+  flex: none;
 }
 
 .trainerInfo {

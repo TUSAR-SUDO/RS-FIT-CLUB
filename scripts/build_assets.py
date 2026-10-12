@@ -99,6 +99,22 @@ owner = trim(owner, pad=2)
 report["owner_master"] = {"w": owner.width, "h": owner.height}
 report["owner"] = save_set(owner, "owner", [480, 800, 1200, 1600], IMG)
 
+# ------------------------------------------------------------- trainer cutout
+# The club's trainer, background removed by the club. Same treatment as the
+# owner — kill the near-invisible matting pixels a cut-out tool leaves along a
+# hard edge, then trim to the ink — because this figure is composited over the
+# page's own background rather than sitting in a frame, where a faint halo
+# would read as a grey outline. Used by the 3D parallax figure.
+trainer = Image.open(SRC / "TRAINER IMAGE BG REMOVED.png").convert("RGBA")
+ta = np.asarray(trainer.getchannel("A")).copy()
+ta[ta <= 6] = 0
+trainer = Image.fromarray(
+    np.dstack([np.asarray(trainer)[:, :, :3], ta]).astype(np.uint8), "RGBA"
+)
+trainer = trim(trainer, pad=2)
+report["trainer_master"] = {"w": trainer.width, "h": trainer.height}
+report["trainer"] = save_set(trainer, "trainer", [480, 800, 1200], IMG)
+
 # --------------------------------------------------------------- noise texture
 rng = np.random.default_rng(20261010)
 field = rng.integers(0, 256, size=(160, 160), dtype=np.int64)

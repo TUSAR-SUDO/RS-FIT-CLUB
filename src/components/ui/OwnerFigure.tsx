@@ -13,6 +13,11 @@ interface OwnerFigureProps {
   className?: string;
   /** Adds the hard accent edge that sits behind the shoulder. */
   edge?: boolean;
+  /**
+   * Pulls the rim light back and drops the accent edge — for the small
+   * portraits, where the hero's treatment fills the whole plate with glow.
+   */
+  quiet?: boolean;
 }
 
 /**
@@ -21,13 +26,15 @@ interface OwnerFigureProps {
  * hero never shifts while the PNG decodes.
  */
 export const OwnerFigure = forwardRef<HTMLImageElement, OwnerFigureProps>(function OwnerFigure(
-  { renderWidth, priority = false, sizes, className, edge = false },
+  { renderWidth, priority = false, sizes, className, edge = false, quiet = false },
   ref,
 ) {
   const height = Math.round(renderWidth / OWNER_RATIO);
 
   return (
-    <figure className={cx(styles.figure, edge && styles['figure--edge'], className)}>
+    <figure
+      className={cx(styles.figure, edge && styles['figure--edge'], quiet && styles['figure--quiet'], className)}
+    >
       <picture>
         <source type="image/avif" srcSet={ownerSrcSet('avif')} sizes={sizes} />
         <source type="image/webp" srcSet={ownerSrcSet('webp')} sizes={sizes} />

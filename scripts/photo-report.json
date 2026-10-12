@@ -131,6 +131,21 @@
       "h": 1000
     },
     {
+      "file": "team-badal-400",
+      "w": 400,
+      "h": 500
+    },
+    {
+      "file": "team-badal-600",
+      "w": 600,
+      "h": 750
+    },
+    {
+      "file": "team-badal-800",
+      "w": 800,
+      "h": 1000
+    },
+    {
       "file": "program-weight-training-440",
       "w": 440,
       "h": 550

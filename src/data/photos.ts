@@ -77,6 +77,12 @@ import team_nutrition_webp_320 from '../assets/img/team-nutrition-320.webp';
 import team_nutrition_webp_480 from '../assets/img/team-nutrition-480.webp';
 import team_nutrition_webp_640 from '../assets/img/team-nutrition-640.webp';
 import team_nutrition_webp_800 from '../assets/img/team-nutrition-800.webp';
+import team_badal_avif_400 from '../assets/img/team-badal-400.avif';
+import team_badal_avif_600 from '../assets/img/team-badal-600.avif';
+import team_badal_avif_800 from '../assets/img/team-badal-800.avif';
+import team_badal_webp_400 from '../assets/img/team-badal-400.webp';
+import team_badal_webp_600 from '../assets/img/team-badal-600.webp';
+import team_badal_webp_800 from '../assets/img/team-badal-800.webp';
 import program_weight_training_avif_440 from '../assets/img/program-weight-training-440.avif';
 import program_weight_training_avif_660 from '../assets/img/program-weight-training-660.avif';
 import program_weight_training_avif_880 from '../assets/img/program-weight-training-880.avif';
@@ -201,6 +207,15 @@ export const PHOTOS: Record<string, Photo> = {
     src: team_nutrition_webp_800,
     avif: [`${team_nutrition_avif_320} 320w`, `${team_nutrition_avif_480} 480w`, `${team_nutrition_avif_640} 640w`, `${team_nutrition_avif_800} 800w`].join(', '),
     webp: [`${team_nutrition_webp_320} 320w`, `${team_nutrition_webp_480} 480w`, `${team_nutrition_webp_640} 640w`, `${team_nutrition_webp_800} 800w`].join(', '),
+  },
+  'team-badal': {
+    alt: "Badal, the trainer at RS Fit Club, on the gym floor",
+    credit: "Client photograph \u2014 RS Fit Club",
+    width: 800,
+    height: 1000,
+    src: team_badal_webp_800,
+    avif: [`${team_badal_avif_400} 400w`, `${team_badal_avif_600} 600w`, `${team_badal_avif_800} 800w`].join(', '),
+    webp: [`${team_badal_webp_400} 400w`, `${team_badal_webp_600} 600w`, `${team_badal_webp_800} 800w`].join(', '),
   },
   'program-weight-training': {
     alt: "Dumbbell curl in the free-weights area",

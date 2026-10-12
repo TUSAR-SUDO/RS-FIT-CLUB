@@ -115,15 +115,22 @@ three steps:
 3. Nothing else. No component reads a file name directly — they all take a slug from `photos.ts`, and
    the `sizes`/`srcset` hints are already tuned per slot.
 
-The footer carries the line `Photography: licensed stock.` — delete it from
-`src/components/layout/Footer.tsx` once the club's own shoot is in.
+Three frames are **not** stock any more: the two people on the team page and the trainer's figures are
+the club's own photographs (`FILES/TRAINER img.png` → `FILES/photos/team-badal.jpg`, and the owner's
+cut-out). The rest is still licensed stock, which is why the footer still carries the line
+`Photography: licensed stock.` — trim it to `Photography: RS Fit Club.` from
+`src/components/layout/Footer.tsx` once the last of the stock is gone.
 
-The founder cutout is the exception: it lives in `public/media/` with **stable, unhashed names**
-because the LCP preload in `index.html` points at exact URLs. Rebuild it with `npm run assets`
-(`FILES/OWNER bg REMOVED.png` → 480/800/1200/1600, AVIF + WebP, alpha preserved).
+The cut-outs are the exception to the pipeline above: the owner and the trainer live in
+`public/media/` with **stable, unhashed names**, because the LCP preload in `index.html` points at
+exact URLs and the 3D parallax figure composites them straight onto the page. Rebuild both with
+`npm run assets` (`FILES/OWNER bg REMOVED.png` → 480/800/1200/1600 and
+`FILES/TRAINER IMAGE BG REMOVED.png` → 480/800/1200, AVIF + WebP, alpha preserved). The trainer's
+ratio is printed by that script as `trainer_master` and mirrored in `src/data/media.ts`.
 
-`IMAGE_CREDITS.md` lists every frame's photographer and licence, and `src/data/photos.ts` carries
-the credit line next to each slug so attribution travels with the file.
+`IMAGE_CREDITS.md` lists every frame with its licence, and `src/data/photos.ts` carries the credit
+line next to each slug so attribution travels with the file. Regenerate the document with
+`npm run credits` after either script has run.
 
 ## Lead capture
 
@@ -185,8 +192,11 @@ Static output — any static host works.
    names with initials.
 2. **Verified from the club's public page** (earlier): the mission paraphrase and
    `rsfitness@gmail.com`.
-3. **Stand-ins, written to fit the club and easy to replace**: the owner's story and quote, the four
-   team members, plan names and prices, the weekly timetable, the counter stats, three member
+3. **Supplied by the client**: the opening date (April 2020, so the years counter is derived rather
+   than typed), the trainer's name and photograph, and the split of the four roles between the owner
+   and the trainer.
+4. **Stand-ins, written to fit the club and easy to replace**: the owner's story and quote, plan
+   names and prices, the weekly timetable, the counter stats, three member
    transformation stories, the street line and PIN, the two-hour callback window, and the Sunday
    hours (the listing prints "Open 24 hours" for Sunday, which is how Google renders a day whose
    hours were never set, so the site quotes the same window as the rest of the week instead).

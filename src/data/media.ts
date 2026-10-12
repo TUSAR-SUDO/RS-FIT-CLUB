@@ -24,6 +24,17 @@ export const OWNER_RATIO = 1019 / 1520;
 export const ownerSrcSet = (format: 'avif' | 'webp'): string =>
   OWNER_WIDTHS.map((w) => `/media/owner-${w}.${format} ${w}w`).join(', ');
 
+/* The trainer's cut-out. Same deal as the owner: stable /media names, a
+   trimmed transparent master, and the ratio recorded here so the figure can
+   reserve its box before the file arrives. 1162×1306 is what
+   scripts/build_assets.py reports after the matte is trimmed. */
+export const TRAINER_WIDTHS = [480, 800, 1200] as const;
+
+export const TRAINER_RATIO = 1162 / 1306;
+
+export const trainerSrcSet = (format: 'avif' | 'webp'): string =>
+  TRAINER_WIDTHS.map((w) => `/media/trainer-${w}.${format} ${w}w`).join(', ');
+
 export const LOGO = {
   avif: {
     srcSet: `${logoAvif320} 320w, ${logoAvif640} 640w, ${logoAvif960} 960w`,
